@@ -2,5 +2,5 @@
 gradle.properties
 productionKey.jks
 stagingKey.jks
-# sandboxKey.jks
+sandboxKey.jks
 developKey.jks
