@@ -27,6 +27,7 @@ jobs:
 
             - name: "Build"
               run: chmod +x ./gradlew
+            - run: ./gradlew --stop
             - run: ./gradlew assembleDebug
 
 
