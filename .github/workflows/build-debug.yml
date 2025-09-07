@@ -6,7 +6,7 @@ on:
             - develop
             - staging
             - sandbox
-            - feature/202509/mabuchi/develop
+            - feature/202509/mabuchi/**
 
 jobs:
     build:
