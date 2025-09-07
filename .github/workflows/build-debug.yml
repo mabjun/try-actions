@@ -19,8 +19,9 @@ jobs:
                 java-version: '8'
                 distribution: 'temurin'
                 cache: 'gradle'
+            - run: cd myapp
             - run: chmod +x ./gradlew
-            - run: ./gradlew assembleDebug
+            - run: /gradlew assembleDebug
 
 
     
