@@ -8,11 +8,10 @@ on:
             - sandbox
             - feature/202509/mabuchi/**
 
-env:
-    ASSEMBLE_DEVELOP_DEBUG: "assembleDevelopDebug"
-    ASSEMBLE_STAGING_DEBUG: "assembleStagingDebug"
-    ASSEMBLE_SANDBOX_DEBUG: "assembleSandboxDebug"
-    #ASSEMBLE_TASK: "assembleDevelopDebug"
+#env:
+#    ASSEMBLE_DEVELOP_DEBUG: "assembleDevelopDebug"
+#    ASSEMBLE_STAGING_DEBUG: "assembleStagingDebug"
+#    ASSEMBLE_SANDBOX_DEBUG: "assembleSandboxDebug"
 
 jobs:
     build-debug:
@@ -24,8 +23,8 @@ jobs:
             run:
                 working-directory: 'myapp'
         env:
-            BRANCH: 'develop'
-            BRANCH_CAMEL: 'Develop'
+            BRANCH: 'staging'
+            BRANCH_CAMEL: 'Staging'
             BUILD_TYPE: 'debug'
             BUILD_TYPE_CAMEL: 'Debug'
         steps:
@@ -76,7 +75,7 @@ jobs:
                 tag_name: 'v.${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
                 files: |
                     myapp/app/build/outputs/apk/develop/debug/*.apk
-                    myapp/app/build/outputs/apk/${{ env.BRANCH }}/**/*.apk
+                    myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/*.apk
 
 
     
