@@ -36,9 +36,11 @@ jobs:
             - run: ./gradlew assembleDevelopDebug --no-daemon
 
             - name: 'Github Release'
-              uses: softprops/action-gh-release@v1
+              uses: softprops/action-gh-release@v2
+              if: github.ref_type == 'tag'
               with:
-                tag_name: ${{ steps.tag.outputs.tag }}
+                files: |
+                    app/build/outputs/apk/develop/debug/app-develop-debug.apk
 
 
     
