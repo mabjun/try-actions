@@ -25,9 +25,15 @@ jobs:
                 distribution: 'temurin'
                 cache: 'gradle'
 
+            - name: 'Restore key stores'
+              run: echo "${{ secrets.GRADLE_PROPERTIES_BASE64 }}" | base64 -d > app/gradle.properties
+            - run: echo "${{ secrets.DEVELOP_KEY_BASE64 }}" | base64 -d > app/developKey.jks
+            - run: echo "${{ secrets.STAGING_KEY_BASE64 }}" | base64 -d > app/stagingKey.jks
+            - run: echo "${{ secrets.SANDBOX_KEY_BASE64 }}" | base64 -d > app/sandboxKey.jks
+            - run: echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
+            
             - run: chmod +x ./gradlew
-#            - run: ./gradlew --stop
-            - run: ./gradlew assembleDebug
+            - run: ./gradlew assembleDebug --no-daemon
 
 
     
