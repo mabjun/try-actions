@@ -12,22 +12,27 @@ env:
     ASSEMBLE_DEVELOP_DEBUG: "assembleDevelopDebug"
     ASSEMBLE_STAGING_DEBUG: "assembleStagingDebug"
     ASSEMBLE_SANDBOX_DEBUG: "assembleSandboxDebug"
-    ASSEMBLE_TASK: "assembleDevelopDebug"
+    #ASSEMBLE_TASK: "assembleDevelopDebug"
 
 jobs:
     build-debug:
         runs-on: ubuntu-latest
-        # Releases の公開に書き込み権限が必要
+        # Releases への公開に書き込み権限が必要
         permissions:
             contents: write
         defaults:
             run:
                 working-directory: 'myapp'
+        env:
+            BRANCH: ${{ github.ref_name }}
+            BRANCH_CAMEL: 'Develop'
+            BUILD_TYPE: 'debug'
+            BUILD_TYPE_CAMEL: 'Debug'
         steps:
             - name: 'Checkout'
               uses: actions/checkout@v5
 
-            - name: "Setup Java 8"
+            - name: "Setup Java"
               uses: actions/setup-java@v5
               with:
                 java-version: '17'
@@ -36,8 +41,8 @@ jobs:
 
             - name: 'Get short SHA'
               id: get_short_sha
-              run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_OUTPUT"
-            - run: echo "SHA:${{ steps.get_short_sha.outputs.SHORT_SHA }}"
+              run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
+            - run: echo "SHA:${{ env.SHORT_SHA }}"
 
             - name: 'Restore key stores'
               run: echo "${{ secrets.GRADLE_PROPERTIES_BASE64 }}" | base64 -d > app/gradle.properties
@@ -46,17 +51,19 @@ jobs:
             - run: echo "${{ secrets.SANDBOX_KEY_BASE64 }}" | base64 -d > app/sandboxKey.jks
             - run: echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
             - run: ls -l app
+
             - run: chmod +x ./gradlew
 
             - run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
             - run: echo "version:v.${{ env.VERSION_NAME }}"
 
+            - run: echo "ASSEMBLE_TASK=assemble${{ env.BRANCH_CAMEL }}${{ env.BUILD_TYPE_CAMEL }}" >> $GITHUB_ENV
 
             - run: ./gradlew ${{ env.ASSEMBLE_TASK }} --no-daemon
 
             - run: ls -l app/build/outputs/apk
             - run: ls -l app/build/outputs/apk/develop
-            - run: ls -l app/build/outputs/apk/develop/debug
+            - run: ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
             - run: echo ${{ github.ref_name }}
             - run: echo ${{ github.ref }}
@@ -65,9 +72,10 @@ jobs:
               with:
                 name: 'aaa'
                 body: 'bbb'
-                tag_name: 'cc2'
+                tag_name: 'v.${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
                 files: |
                     myapp/app/build/outputs/apk/develop/debug/*.apk
+                    myapp/app/build/outputs/apk/${{ env.BRANCH }}
 
 
     

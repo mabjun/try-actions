@@ -119,6 +119,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
+// Github Actions への versionName の受け渡しに使用。
 tasks.register("printVersionName") {
     println(android.defaultConfig.versionName)
 }
