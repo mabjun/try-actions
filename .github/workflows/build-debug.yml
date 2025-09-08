@@ -31,7 +31,7 @@ jobs:
             - run: echo "${{ secrets.STAGING_KEY_BASE64 }}" | base64 -d > app/stagingKey.jks
             - run: echo "${{ secrets.SANDBOX_KEY_BASE64 }}" | base64 -d > app/sandboxKey.jks
             - run: echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
-            
+            - run: ls app
             - run: chmod +x ./gradlew
             - run: ./gradlew assembleDebug --no-daemon
 
