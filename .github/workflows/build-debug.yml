@@ -23,8 +23,8 @@ jobs:
             run:
                 working-directory: 'myapp'
         env:
-            BRANCH: 'staging'
-            BRANCH_CAMEL: 'Staging'
+            BRANCH: 'sandbox'
+            BRANCH_CAMEL: 'Sandbox'
             BUILD_TYPE: 'debug'
             BUILD_TYPE_CAMEL: 'Debug'
         steps:
@@ -74,7 +74,6 @@ jobs:
                 body: ''
                 tag_name: 'v.${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
                 files: |
-                    myapp/app/build/outputs/apk/develop/debug/*.apk
                     myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/*.apk
 
 
