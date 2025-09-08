@@ -49,7 +49,7 @@ jobs:
                 body: 'bbb'
                 tag_name: 'cc1'
                 files: |
-                    app/build/outputs/apk/develop/debug/app-develop-debug.apk
+                    app/build/outputs/apk/develop/debug/*.apk
 
 
     
