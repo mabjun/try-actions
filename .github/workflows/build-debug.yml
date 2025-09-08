@@ -8,9 +8,16 @@ on:
             - sandbox
             - feature/202509/mabuchi/**
 
+env:
+    ASSEMBLE_DEVELOP_DEBUG: "assembleDevelopDebug"
+    ASSEMBLE_STAGING_DEBUG: "assembleStagingDebug"
+    ASSEMBLE_SANDBOX_DEBUG: "assembleSandboxDebug"
+    ASSEMBLE_TASK: ${{ env.ASSEMBLE_DEVELOP_DEBUG }}
+
 jobs:
     build-debug:
         runs-on: ubuntu-latest
+        # Releases の公開に書き込み権限が必要
         permissions:
             contents: write
         defaults:
@@ -35,13 +42,14 @@ jobs:
             - run: echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
             - run: ls -l app
             - run: chmod +x ./gradlew
-            - run: ./gradlew assembleDevelopDebug --no-daemon
+            - run: ./gradlew ${{ env.ASSEMBLE_TASK }} --no-daemon
 
             - run: ls -l app/build/outputs/apk
             - run: ls -l app/build/outputs/apk/develop
             - run: ls -l app/build/outputs/apk/develop/debug
 
             - run: echo ${{ github.ref_name }}
+            - run: echo ${{ github.ref }}
             - name: 'Github Release'
               uses: softprops/action-gh-release@v2
               with:
