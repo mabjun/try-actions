@@ -11,6 +11,8 @@ on:
 jobs:
     build-debug:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         defaults:
             run:
                 working-directory: 'myapp'
@@ -42,7 +44,6 @@ jobs:
                 name: 'aaa'
                 body: 'bbb'
                 tag_name: 'ccc'
-                token: ${{ secrets.GITHUB_TOKEN }}
 #                files: |
 #                    app/build/outputs/apk/develop/debug/app-develop-debug.apk
 
