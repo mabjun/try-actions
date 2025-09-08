@@ -39,9 +39,9 @@ jobs:
             - name: 'Github Release'
               uses: softprops/action-gh-release@v2
               with:
-                name: ${{ github.event.inputs.tag }}
-                body: ${{ github.event.inputs.tag }}
-                tag_name: ${{ github.event.inputs.tag }}
+                name: 'aaa'
+                body: 'bbb'
+                tag_name: 'ccc'
                 files: |
                     app/build/outputs/apk/develop/debug/app-develop-debug.apk
 
