@@ -12,8 +12,8 @@ env:
     ASSEMBLE_DEVELOP_DEBUG: "assembleDevelopDebug"
     ASSEMBLE_STAGING_DEBUG: "assembleStagingDebug"
     ASSEMBLE_SANDBOX_DEBUG: "assembleSandboxDebug"
-    ASSEMBLE_TASK: ${{ env.ASSEMBLE_DEVELOP_DEBUG }}
-
+    ASSEMBLE_TASK: "assembleDevelopDebug"
+    
 jobs:
     build-debug:
         runs-on: ubuntu-latest
