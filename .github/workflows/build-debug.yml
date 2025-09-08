@@ -33,12 +33,12 @@ jobs:
             - run: echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
             - run: ls -l app
             - run: chmod +x ./gradlew
-            - run: ./gradlew assembleDebug --no-daemon
+            - run: ./gradlew assembleDevelopDebug --no-daemon
 
             - name: 'Github Release'
               uses: softprops/action-gh-release@v1
               with:
-                name: ${{ steps.tag.outputs.tag }}
+                tag_name: ${{ steps.tag.outputs.tag }}
 
 
     
