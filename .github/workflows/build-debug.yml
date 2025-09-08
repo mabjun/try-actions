@@ -38,6 +38,10 @@ jobs:
               id: get_short_sha
               run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" > "$GITHUB_OUTPUT"
 
+            - run: echo "SHA:${{ steps.get_short_sha.SHORT_SHA }}"
+            - run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
+            - run: echo "version:v.${{ env.VERSION_NAME }}"
+            
             - name: 'Restore key stores'
               run: echo "${{ secrets.GRADLE_PROPERTIES_BASE64 }}" | base64 -d > app/gradle.properties
             - run: echo "${{ secrets.DEVELOP_KEY_BASE64 }}" | base64 -d > app/developKey.jks

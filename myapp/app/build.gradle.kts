@@ -118,3 +118,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+tasks.register("printVersionName") {
+    println(android.defaultConfig.versionName)
+}
