@@ -61,7 +61,7 @@ jobs:
             - run: ./gradlew ${{ env.ASSEMBLE_TASK }} --no-daemon
 
             - run: ls -l app/build/outputs/apk
-            - run: ls -l app/build/outputs/apk/develop
+          #  - run: ls -l app/build/outputs/apk/develop
             - run: ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
             - run: echo ${{ github.ref_name }}
