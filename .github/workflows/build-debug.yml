@@ -9,7 +9,7 @@ on:
             - feature/202509/mabuchi/**
 
 jobs:
-    build:
+    build-debug:
         runs-on: ubuntu-latest
         defaults:
             run:
@@ -37,8 +37,10 @@ jobs:
 
             - name: 'Github Release'
               uses: softprops/action-gh-release@v2
-              if: github.ref_type == 'tag'
               with:
+                name: ${{ github.event.inputs.tag }}
+                body: ${{ github.event.inputs.tag }}
+                tag_name: ${{ github.event.inputs.tag }}
                 files: |
                     app/build/outputs/apk/develop/debug/app-develop-debug.apk
 
