@@ -42,8 +42,8 @@ jobs:
                 name: 'aaa'
                 body: 'bbb'
                 tag_name: 'ccc'
-                files: |
-                    app/build/outputs/apk/develop/debug/app-develop-debug.apk
+#                files: |
+#                    app/build/outputs/apk/develop/debug/app-develop-debug.apk
 
 
     
