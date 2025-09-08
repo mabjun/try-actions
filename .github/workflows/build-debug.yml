@@ -37,13 +37,17 @@ jobs:
             - run: chmod +x ./gradlew
             - run: ./gradlew assembleDevelopDebug --no-daemon
 
+            - run: ls -l app/build/outputs/apk
+            - run: ls -l app/build/outputs/apk/develop
+            - run: ls -l app/build/outputs/apk/develop/debug
+
             - run: echo ${{ github.ref_name }}
             - name: 'Github Release'
               uses: softprops/action-gh-release@v2
               with:
                 name: 'aaa'
                 body: 'bbb'
-                tag_name: 'ccc'
+                tag_name: 'cc0'
 #                files: |
 #                    app/build/outputs/apk/develop/debug/app-develop-debug.apk
 
