@@ -24,7 +24,7 @@ jobs:
             run:
                 working-directory: 'myapp'
         env:
-            BRANCH: ${{ github.ref_name }}
+            BRANCH: 'develop'
             BRANCH_CAMEL: 'Develop'
             BUILD_TYPE: 'debug'
             BUILD_TYPE_CAMEL: 'Debug'
@@ -67,15 +67,16 @@ jobs:
 
             - run: echo ${{ github.ref_name }}
             - run: echo ${{ github.ref }}
+
             - name: 'Github Release'
               uses: softprops/action-gh-release@v2
               with:
-                name: 'aaa'
-                body: 'bbb'
+                name: 'v.${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
+                body: ''
                 tag_name: 'v.${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
                 files: |
                     myapp/app/build/outputs/apk/develop/debug/*.apk
-                    myapp/app/build/outputs/apk/${{ env.BRANCH }}
+                    myapp/app/build/outputs/apk/${{ env.BRANCH }}/**/*.apk
 
 
     
