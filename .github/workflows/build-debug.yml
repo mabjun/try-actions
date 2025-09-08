@@ -42,6 +42,7 @@ jobs:
                 name: 'aaa'
                 body: 'bbb'
                 tag_name: 'ccc'
+                token: ${{ secrets.GITHUB_TOKEN }}
 #                files: |
 #                    app/build/outputs/apk/develop/debug/app-develop-debug.apk
 
