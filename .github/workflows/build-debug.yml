@@ -40,19 +40,19 @@ jobs:
                 echo ${{ github.ref }}
 
             - name: 'develop ブランチ用の env を設定'
-              if: contains(github.ref_name, 'develop')
+              if: github.ref_name == 'develop' || contains(github.ref_name, 'actNone')
               run: | 
                 echo "BRANCH=develop" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Develop" >> $GITHUB_ENV
 
             - name: 'staging ブランチの場合用の env を設定'
-              if: contains(github.ref_name, 'mabuchi')
+              if: github.ref_name == 'staging' || contains(github.ref_name, 'actNone')
               run: | 
                 echo "BRANCH=staging" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Staging" >> $GITHUB_ENV
 
             - name: 'sandbox ブランチの場合用の env を設定'
-              if: contains(github.ref_name, 'sandbox')
+              if: github.ref_name == 'sandbox' || contains(github.ref_name, 'act1')
               run: | 
                 echo "BRANCH=sandbox" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Sandbox" >> $GITHUB_ENV
