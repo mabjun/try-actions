@@ -4,7 +4,7 @@ on:
     push:
         branches:
             - main
-            - feature/202509/mabuchi/actYYY
+            - feature/202509/mabuchi/act1
 
 jobs:
     build-release:
