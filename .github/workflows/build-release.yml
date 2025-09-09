@@ -79,9 +79,8 @@ jobs:
             # - name: 'versionName の確認(*要削除*)'
             #   run: echo "version:v.${{ env.VERSION_NAME }}"
 
-            - name: './gradlew assembleDebug'
-              run: ./gradlew assembleDebug --no-daemon
-
+            - name: './gradlew assembleDevelopDebug'
+              run: ./gradlew assembleDevelopDebug --no-daemon
             - name: 'develop-debug.apk をリネーム'
               run: |
                 APK_NAME="app/build/outputs/apk/develop/debug/app-develop-debug.apk"
@@ -89,6 +88,8 @@ jobs:
                 mv $APK_NAME $NEW_APK_NAME
                 ls -l "app/build/outputs/apk/develop/debug"
 
+            - name: './gradlew assembleStagingDebug'
+              run: ./gradlew assembleStagingDebug --no-daemon
             - name: 'staging-debug.apk をリネーム'
               run: |
                 APK_NAME="app/build/outputs/apk/staging/debug/app-staging-debug.apk"
@@ -96,6 +97,8 @@ jobs:
                 mv $APK_NAME $NEW_APK_NAME
                 ls -l "app/build/outputs/apk/staging/debug"
 
+            - name: './gradlew assembleSandboxDebug'
+              run: ./gradlew assembleSandboxDebug --no-daemon
             - name: 'sandbox-debug.apk をリネーム'
               run: |
                 APK_NAME="app/build/outputs/apk/sandbox/debug/app-sandbox-debug.apk"
@@ -107,10 +110,10 @@ jobs:
               run: ./gradlew assembleProductionRelease --no-daemon
             - name: 'production-release.apk をリネーム'
               run: |
-                APK_NAME="app/build/outputs/bundle/production/release/app-production-release.apk"
+                APK_NAME="app/build/outputs/apk/production/release/app-production-release.apk"
                 NEW_APK_NAME="${APK_NAME//app-/v.${{ env.VERSION_NAME }}-}"
                 mv $APK_NAME $NEW_APK_NAME
-                ls -l "app/build/outputs/bundle/production/release"
+                ls -l "app/build/outputs/apk/production/release"
 
             - name: './gradlew bundleProductionRelease'
               run: ./gradlew bundleProductionRelease --no-daemon
