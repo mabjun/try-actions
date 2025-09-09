@@ -39,54 +39,62 @@ jobs:
                 distribution: 'temurin'
                 cache: 'gradle'
 
-            - name: 'develop ブランチの env を設定'
-              if: contains(github.ref_name, 'develop')
+            - name: 'ref の確認(*要削除*)'
+              run: |
+                echo ${{ github.ref_name }}
+                echo ${{ github.ref }}
+
+            - name: 'develop ブランチ用の env を設定'
+              if: contains(github.ref_name, 'mabuchi')
               run: | 
                 echo "BRANCH=develop" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Develop" >> $GITHUB_ENV
 
-            - name: 'staging ブランチの env を設定'
-              if: contains(github.ref_name, 'mabuchi')
+            - name: 'staging ブランチの場合用の env を設定'
+              if: contains(github.ref_name, 'staging')
               run: | 
                 echo "BRANCH=staging" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Staging" >> $GITHUB_ENV
 
-            - name: 'sandbox ブランチの env を設定'
+            - name: 'sandbox ブランチの場合用の env を設定'
               if: contains(github.ref_name, 'sandbox')
               run: | 
                 echo "BRANCH=sandbox" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Sandbox" >> $GITHUB_ENV
 
-            - name: 'Get short SHA'
+            - name: 'ショート SHA を取得'
               id: get_short_sha
               run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
             - run: echo "SHA:${{ env.SHORT_SHA }}"
 
-            - name: 'Restore key stores'
-              run: echo "${{ secrets.GRADLE_PROPERTIES_BASE64 }}" | base64 -d > app/gradle.properties
-            - run: echo "${{ secrets.DEVELOP_KEY_BASE64 }}" | base64 -d > app/developKey.jks
-            - run: echo "${{ secrets.STAGING_KEY_BASE64 }}" | base64 -d > app/stagingKey.jks
-            - run: echo "${{ secrets.SANDBOX_KEY_BASE64 }}" | base64 -d > app/sandboxKey.jks
-            - run: echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
-            - run: ls -l app
+            - name: 'キーストアを復元'
+              run: |
+                echo "${{ secrets.GRADLE_PROPERTIES_BASE64 }}" | base64 -d > app/gradle.properties
+                echo "${{ secrets.DEVELOP_KEY_BASE64 }}" | base64 -d > app/developKey.jks
+                echo "${{ secrets.STAGING_KEY_BASE64 }}" | base64 -d > app/stagingKey.jks
+                echo "${{ secrets.SANDBOX_KEY_BASE64 }}" | base64 -d > app/sandboxKey.jks
+                echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
+
+            - name: 'キーストア復元の確認(*要削除*)'
+              run: ls -l app
 
             - run: chmod +x ./gradlew
 
-            - run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
-            - run: echo "version:v.${{ env.VERSION_NAME }}"
+            - name: 'versionName を取得'
+              run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
+   
+            - name: 'versionName の確認(*要削除*)'
+              run: echo "version:v.${{ env.VERSION_NAME }}"
 
-            - run: echo "ASSEMBLE_TASK=assemble${{ env.BRANCH_CAMEL }}${{ env.BUILD_TYPE_CAMEL }}" >> $GITHUB_ENV
+            - name: './gradlew assemble<Branch><BuildType>'
+              run: ./gradlew assemble${{ env.BRANCH_CAMEL }}${{ env.BUILD_TYPE_CAMEL }} --no-daemon
 
-            - run: ./gradlew ${{ env.ASSEMBLE_TASK }} --no-daemon
+            - name: 'outputs フォルダの確認(*要削除*)'
+              run: |
+                ls -l app/build/outputs/apk
+                ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
-            - run: ls -l app/build/outputs/apk
-          #  - run: ls -l app/build/outputs/apk/develop
-            - run: ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
-
-            - run: echo ${{ github.ref_name }}
-            - run: echo ${{ github.ref }}
-
-            - name: 'Github Release'
+            - name: 'Github Release に APK を配置'
               uses: softprops/action-gh-release@v2
               with:
                 name: 'v.${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
