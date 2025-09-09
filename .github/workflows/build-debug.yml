@@ -6,7 +6,7 @@ on:
             - develop
             - staging
             - sandbox
-            - feature/202509/mabuchi/**
+            - feature/202509/mabuchi/actXXX
 
 jobs:
     build-debug:
@@ -40,19 +40,19 @@ jobs:
                 echo ${{ github.ref }}
 
             - name: 'develop ブランチ用の env を設定'
-              if: github.ref_name == 'develop' || contains(github.ref_name, 'actNone')
+              if: github.ref_name == 'develop' || contains(github.ref_name, 'for_debug_actions_at_other_branch')
               run: | 
                 echo "BRANCH=develop" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Develop" >> $GITHUB_ENV
 
             - name: 'staging ブランチの用の env を設定'
-              if: github.ref_name == 'staging' || contains(github.ref_name, 'actNone')
+              if: github.ref_name == 'staging' || contains(github.ref_name, 'for_debug_actions_at_other_branch')
               run: | 
                 echo "BRANCH=staging" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Staging" >> $GITHUB_ENV
 
             - name: 'sandbox ブランチの用の env を設定'
-              if: github.ref_name == 'sandbox' || contains(github.ref_name, 'act1')
+              if: github.ref_name == 'sandbox' || contains(github.ref_name, 'for_debug_actions_at_other_branch')
               run: | 
                 echo "BRANCH=sandbox" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Sandbox" >> $GITHUB_ENV
@@ -92,9 +92,8 @@ jobs:
             - name: 'APK をリネーム'
               run: |
                 APK_NAME="app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/app-${{ env.BRANCH }}-${{ env.BUILD_TYPE}}.apk"
-                NEW_NAME="${APK_NAME//app-/v.${{ env.VERSION_NAME }}-}"
-                echo $NEW_NAME
-                mv $APK_NAME $NEW_NAME
+                NEW_APK_NAME="${APK_NAME//app-/v.${{ env.VERSION_NAME }}-}"
+                mv $APK_NAME $NEW_APK_NAME
                 ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
             - name: 'Github Release に APK を配置'
