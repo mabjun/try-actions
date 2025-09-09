@@ -28,6 +28,14 @@ jobs:
             BUILD_TYPE: 'release'
             BUILD_TYPE_CAMEL: 'Release'
         steps:
+            - name: 'Set env by branch'
+              if: github.ref_name == 'develop'
+              run: | 
+                echo "BRANCH=develop" >> $GITHUB_ENV
+                echo "BRANCH_CAMEL=Develop" >> $GITHUB_ENV
+                echo "BUILD_TYPE=debug" >> $GITHUB_ENV
+                echo "BUILD_TYPE_CAMEL=Debug" >> $GITHUB_ENV
+
             - name: 'Checkout'
               uses: actions/checkout@v5
 
