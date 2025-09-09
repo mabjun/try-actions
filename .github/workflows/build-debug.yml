@@ -29,7 +29,7 @@ jobs:
             BUILD_TYPE_CAMEL: 'Release'
         steps:
             - name: 'Set env by branch'
-              if: github.ref_name == 'develop'
+              if: contains(github.ref_name, 'mabuchi')
               run: | 
                 echo "BRANCH=develop" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Develop" >> $GITHUB_ENV
