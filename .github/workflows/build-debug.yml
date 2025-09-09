@@ -89,6 +89,14 @@ jobs:
                 ls -l app/build/outputs/apk
                 ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
+            - name: 'APK をリネーム'
+              run: 
+                APK_NAME="myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/app-${{ env.BRANCH }}-${{ env.BUILD_TYPE}}.apk"
+                NEW_NAME="${APK_NAME//app-/v.${{ env.VERSION_NAME }}-}"
+                echo $NEW_NAME
+                mv $APK_NAME $NEW_NAME
+                ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
+
             - name: 'Github Release に APK を配置'
               uses: softprops/action-gh-release@v2
               with:
