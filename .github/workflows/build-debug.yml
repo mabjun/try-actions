@@ -76,7 +76,7 @@ jobs:
               run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
    
             # - name: 'versionName の確認(*要削除*)'
-            #   run: echo "version:v.${{ env.VERSION_NAME }}"
+            #   run: echo "version:v${{ env.VERSION_NAME }}"
 
             - name: './gradlew assemble<Branch><BuildType>'
               run: ./gradlew assemble${{ env.BRANCH_CAMEL }}${{ env.BUILD_TYPE_CAMEL }} --no-daemon
@@ -84,16 +84,16 @@ jobs:
             - name: 'APK をリネーム'
               run: |
                 APK_NAME="app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/app-${{ env.BRANCH }}-${{ env.BUILD_TYPE}}.apk"
-                NEW_APK_NAME="${APK_NAME//app-/v.${{ env.VERSION_NAME }}-}"
+                NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
                 mv $APK_NAME $NEW_APK_NAME
                 ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
             - name: 'Github Release に APK を配置'
               uses: softprops/action-gh-release@v2
               with:
-                name: 'v.${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
+                name: 'v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
                 body: ''
-                tag_name: 'v.${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
+                tag_name: 'v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
                 files: |
                     myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/*.apk
 
