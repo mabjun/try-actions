@@ -45,13 +45,13 @@ jobs:
                 echo "BRANCH=develop" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Develop" >> $GITHUB_ENV
 
-            - name: 'staging ブランチの場合用の env を設定'
+            - name: 'staging ブランチの用の env を設定'
               if: github.ref_name == 'staging' || contains(github.ref_name, 'actNone')
               run: | 
                 echo "BRANCH=staging" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Staging" >> $GITHUB_ENV
 
-            - name: 'sandbox ブランチの場合用の env を設定'
+            - name: 'sandbox ブランチの用の env を設定'
               if: github.ref_name == 'sandbox' || contains(github.ref_name, 'act1')
               run: | 
                 echo "BRANCH=sandbox" >> $GITHUB_ENV
@@ -91,7 +91,7 @@ jobs:
 
             - name: 'APK をリネーム'
               run: |
-                APK_NAME="myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/app-${{ env.BRANCH }}-${{ env.BUILD_TYPE}}.apk"
+                APK_NAME="app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/app-${{ env.BRANCH }}-${{ env.BUILD_TYPE}}.apk"
                 NEW_NAME="${APK_NAME//app-/v.${{ env.VERSION_NAME }}-}"
                 echo $NEW_NAME
                 mv $APK_NAME $NEW_NAME
