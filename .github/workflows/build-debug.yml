@@ -8,11 +8,6 @@ on:
             - sandbox
             - feature/202509/mabuchi/**
 
-#env:
-#    ASSEMBLE_DEVELOP_DEBUG: "assembleDevelopDebug"
-#    ASSEMBLE_STAGING_DEBUG: "assembleStagingDebug"
-#    ASSEMBLE_SANDBOX_DEBUG: "assembleSandboxDebug"
-
 jobs:
     build-debug:
         runs-on: ubuntu-latest
@@ -45,13 +40,13 @@ jobs:
                 echo ${{ github.ref }}
 
             - name: 'develop ブランチ用の env を設定'
-              if: contains(github.ref_name, 'mabuchi')
+              if: contains(github.ref_name, 'develop')
               run: | 
                 echo "BRANCH=develop" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Develop" >> $GITHUB_ENV
 
             - name: 'staging ブランチの場合用の env を設定'
-              if: contains(github.ref_name, 'staging')
+              if: contains(github.ref_name, 'mabuchi')
               run: | 
                 echo "BRANCH=staging" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Staging" >> $GITHUB_ENV
