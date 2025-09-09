@@ -90,7 +90,7 @@ jobs:
                 ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
             - name: 'APK をリネーム'
-              run: 
+              run: |
                 APK_NAME="myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/app-${{ env.BRANCH }}-${{ env.BUILD_TYPE}}.apk"
                 NEW_NAME="${APK_NAME//app-/v.${{ env.VERSION_NAME }}-}"
                 echo $NEW_NAME
