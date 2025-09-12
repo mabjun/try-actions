@@ -6,7 +6,7 @@ on:
             - develop
             - staging
             - sandbox
-#            - feature/202509/mabuchi/act1
+            - feature/202509/mabuchi/act1
 
 jobs:
     build-debug:
@@ -32,12 +32,14 @@ jobs:
               with:
                 java-version: '17'
                 distribution: 'temurin'
-                cache: 'gradle'
-
+            
+            - name: 'Setup gradle'
+              uses: gradle/actions/setup-gradle@v4
+              
             - run: echo 'github.ref_name:${{ github.ref_name }}'
 
             - name: 'develop ブランチ用の env を設定'
-              if: github.ref_name == 'develop' || contains(github.ref_name, 'for_debug_actions_at_other_branch')
+              if: github.ref_name == 'develop' || contains(github.ref_name, 'act1')
               run: | 
                 echo "BRANCH=develop" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Develop" >> $GITHUB_ENV
