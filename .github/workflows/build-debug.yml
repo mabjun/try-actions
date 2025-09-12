@@ -35,7 +35,7 @@ jobs:
             
             - name: 'Setup gradle'
               uses: gradle/actions/setup-gradle@v4
-              
+
             - run: echo 'github.ref_name:${{ github.ref_name }}'
 
             - name: 'develop ブランチ用の env を設定'
