@@ -90,7 +90,7 @@ jobs:
                 mv $APK_NAME $NEW_APK_NAME
                 ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
-            - name: 'Github Release に APK を配置'
+            - name: 'Github Release に APK を配置する'
               uses: softprops/action-gh-release@v2
               with:
                 name: 'v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
