@@ -1,0 +1,101 @@
+
+name: Pull request
+on:
+    workflow_dispatch:
+    pull_request:
+        branches:
+            - develop
+##            - feature/202509/mabuchi/actYYY
+
+jobs:
+    build-release:
+        runs-on: ubuntu-latest
+        # Releases への公開に書き込み権限が必要
+        permissions:
+            contents: write
+        defaults:
+            run:
+                working-directory: 'myapp'
+        # env:
+        #     BRANCH: 'production'
+        #     BRANCH_CAMEL: 'Production'
+        #     BUILD_TYPE: 'release'
+        #     BUILD_TYPE_CAMEL: 'Release'
+
+        steps:
+            - name: 'Checkout'
+              uses: actions/checkout@v5
+
+            - name: "Setup Java"
+              uses: actions/setup-java@v5
+              with:
+                java-version: '17'
+                distribution: 'temurin'
+
+            - name: 'Setup gradle'
+              uses: gradle/actions/setup-gradle@v4
+
+            - run: echo 'github.ref_name:${{ github.ref_name }}'
+
+            # - name: 'ショート SHA を取得'
+            #   id: get_short_sha
+            #   run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
+            # - run: echo "SHA:${{ env.SHORT_SHA }}"
+
+            - name: 'キーストアを復元'
+              run: |
+                echo "${{ secrets.GRADLE_PROPERTIES_BASE64 }}" | base64 -d > app/gradle.properties
+                echo "${{ secrets.DEVELOP_KEY_BASE64 }}" | base64 -d > app/developKey.jks
+                echo "${{ secrets.STAGING_KEY_BASE64 }}" | base64 -d > app/stagingKey.jks
+                echo "${{ secrets.SANDBOX_KEY_BASE64 }}" | base64 -d > app/sandboxKey.jks
+                echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
+
+            - run: chmod +x ./gradlew
+
+            - name: 'versionName を取得'
+              run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
+   
+            - name: './gradlew lint'
+              run: ./gradlew lint --no-daemon
+
+            - name: 'Upload results'
+              uses: actions/upload-artifact@v2
+              if: success() || failure()
+              with:
+                name: 'results'
+                path:
+                  elo/app/build/reports/lint-results-*.html
+                  elo/app/build/reports/lint-results-*.xml
+                if-no-files-found: error
+
+              
+
+            # - name: 'develop-debug.apk をリネーム'
+            #   run: |
+            #     APK_NAME="app/build/outputs/apk/develop/debug/app-develop-debug.apk"
+            #     NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
+            #     mv $APK_NAME $NEW_APK_NAME
+            #     ls -l "app/build/outputs/apk/develop/debug"
+
+            # - name: './gradlew assembleStagingDebug'
+            #   run: ./gradlew assembleStagingDebug --no-daemon
+            # - name: 'staging-debug.apk をリネーム'
+            #   run: |
+            #     APK_NAME="app/build/outputs/apk/staging/debug/app-staging-debug.apk"
+            #     NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
+            #     mv $APK_NAME $NEW_APK_NAME
+            #     ls -l "app/build/outputs/apk/staging/debug"
+
+            # - name: 'Github Release に APK を配置'
+            #   uses: softprops/action-gh-release@v2
+            #   with:
+            #     name: 'v${{ env.VERSION_NAME }}-production-release'
+            #     body: ''
+            #     tag_name: 'v${{ env.VERSION_NAME }}-production-release'
+            #     files: |
+            #         myapp/app/build/outputs/apk/develop/debug/*.apk
+            #         myapp/app/build/outputs/apk/staging/debug/*.apk
+            #         myapp/app/build/outputs/apk/sandbox/debug/*.apk
+            #         myapp/app/build/outputs/apk/production/release/*.apk
+            #         myapp/app/build/outputs/bundle/productionRelease/*.aab
+
