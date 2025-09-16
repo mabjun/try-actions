@@ -1,5 +1,5 @@
 
-name: Build debug
+name: Merge debug
 on:
     workflow_dispatch:
     push:
