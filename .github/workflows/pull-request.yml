@@ -63,7 +63,7 @@ jobs:
               if: success() || failure()
               with:
                 name: 'results'
-                path:
+                path: |
                   myapp/app/build/reports/lint-results-*.html
                   myapp/app/build/reports/lint-results-*.xml
                 if-no-files-found: error
