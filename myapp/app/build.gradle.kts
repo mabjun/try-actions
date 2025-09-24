@@ -121,16 +121,24 @@ android {
             applicationIdSuffix = ".local"
             versionNameSuffix = "local"
             signingConfig = signingConfigs.getByName("develop")
-            val localProperties = Properties().apply {
-                load(rootProject.file("local.properties").inputStream())
-            }
             buildConfigField(
                 "String",
                 "URL_PORTAL_SITE",
-                "\"${localProperties.getProperty("URL_PORTAL_SITE")}\""
+                "\"${getLocalProperty("URL_PORTAL_SITE")}\""
             )
 
         }
+    }
+}
+
+private fun getLocalProperty(name: String): String {
+    val localPropertiesFile = rootProject.file("local.properties")
+    return if (localPropertiesFile.exists()) {
+        Properties().apply {
+            load(localPropertiesFile.inputStream())
+        }.getProperty(name)
+    } else {
+        ""
     }
 }
 
