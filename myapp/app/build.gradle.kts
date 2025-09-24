@@ -1,6 +1,10 @@
+import org.gradle.initialization.Environment
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+//    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -15,6 +19,7 @@ android {
         versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     signingConfigs {
@@ -60,6 +65,9 @@ android {
         }
     }
     buildTypes {
+        debug {
+            signingConfig = null
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -77,6 +85,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     flavorDimensions += listOf("default")
@@ -84,24 +93,43 @@ android {
         create("production") {
             dimension = "default"
             signingConfig = signingConfigs.getByName("production")
+            buildConfigField("String", "URL_PORTAL_SITE", "\"https://production.mabware.com\"")
         }
         create("staging") {
             dimension = "default"
             applicationIdSuffix = "staging"
             versionNameSuffix = "staging"
             signingConfig = signingConfigs.getByName("staging")
+            buildConfigField("String", "URL_PORTAL_SITE", "\"https://staging.mabware.com\"")
         }
         create("sandbox") {
             dimension = "default"
             applicationIdSuffix = "sandbox"
             versionNameSuffix = "sandbox"
             signingConfig = signingConfigs.getByName("sandbox")
+            buildConfigField("String", "URL_PORTAL_SITE", "\"https://sandbox.mabware.com\"")
         }
         create("develop") {
             dimension = "default"
             applicationIdSuffix = "develop"
             versionNameSuffix = "develop"
             signingConfig = signingConfigs.getByName("develop")
+            buildConfigField("String", "URL_PORTAL_SITE", "\"https://develop.mabware.com\"")
+        }
+        create("local") {
+            dimension = "default"
+            applicationIdSuffix = ".local"
+            versionNameSuffix = "local"
+            signingConfig = signingConfigs.getByName("develop")
+            val localProperties = Properties().apply {
+                load(rootProject.file("local.properties").inputStream())
+            }
+            buildConfigField(
+                "String",
+                "URL_PORTAL_SITE",
+                "\"${localProperties.getProperty("URL_PORTAL_SITE")}\""
+            )
+
         }
     }
 }
