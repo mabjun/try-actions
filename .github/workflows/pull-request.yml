@@ -62,7 +62,7 @@ jobs:
               uses: actions/upload-artifact@v4
               if: success() || failure()
               with:
-                name: 'results'
+                name: 'results.html'
                 path: |
                   myapp/app/build/reports/lint-results-*.html
                 #  myapp/app/build/reports/lint-results-*.xml
