@@ -3,7 +3,11 @@ name: Pull request
 on:
     workflow_dispatch:
     pull_request:
-        branches:
+      types:
+        - opened
+        - synchronize
+        - reopened
+      branches:
             - develop
 ##            - feature/202509/mabuchi/actYYY
 
