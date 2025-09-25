@@ -3,17 +3,18 @@ name: Pull request
 on:
     workflow_dispatch:
     pull_request:
-      types:
-        - opened
-        - synchronize
-        - reopened
-        - ready_for_review
-      branches:
-            - develop
+        types:
+          - opened
+          - synchronize
+          - reopened
+          - ready_for_review
+        branches:
+          - develop
 ##            - feature/202509/mabuchi/actYYY
 
 jobs:
     pull-request:
+        if: github.event.pull_request.draft == false
         runs-on: ubuntu-latest
         # Releases への公開に書き込み権限が必要
         permissions:
@@ -73,7 +74,7 @@ jobs:
                   myapp/app/build/reports/lint-results-*.xml
                 if-no-files-found: error
 
-                
+
 #                  Wrote HTML report to file:///home/runner/work/try-actions/try-actions/myapp/app/build/reports/lint-results-developDebug.html
               
 
