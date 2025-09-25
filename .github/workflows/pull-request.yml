@@ -62,10 +62,10 @@ jobs:
               uses: actions/upload-artifact@v4
               if: success() || failure()
               with:
-                name: 'results.html'
+                name: 'results'
                 path: |
                   myapp/app/build/reports/lint-results-*.html
-                #  myapp/app/build/reports/lint-results-*.xml
+                  myapp/app/build/reports/lint-results-*.xml
                 if-no-files-found: error
 
 #                  Wrote HTML report to file:///home/runner/work/try-actions/try-actions/myapp/app/build/reports/lint-results-developDebug.html
