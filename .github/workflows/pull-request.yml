@@ -56,7 +56,8 @@ jobs:
               uses: ruby/setup-ruby@v1
               with:
                 ruby-version: 3.2.2
-                bundle-cache: false
+                bundler-cache: false
+                working-directory: 'myapp'
 
             - name: 'Gem install'
               run: |
