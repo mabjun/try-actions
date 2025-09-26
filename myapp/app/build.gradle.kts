@@ -1,19 +1,19 @@
-import org.gradle.initialization.Environment
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-//    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
     namespace = "com.example.myapplication"
+    //noinspection GradleDependency
     compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.myapplication"
         minSdk = 28
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.1"
@@ -97,21 +97,21 @@ android {
         }
         create("staging") {
             dimension = "default"
-            applicationIdSuffix = "staging"
+            applicationIdSuffix = ".staging"
             versionNameSuffix = "staging"
             signingConfig = signingConfigs.getByName("staging")
             buildConfigField("String", "URL_PORTAL_SITE", "\"https://staging.mabware.com\"")
         }
         create("sandbox") {
             dimension = "default"
-            applicationIdSuffix = "sandbox"
+            applicationIdSuffix = ".sandbox"
             versionNameSuffix = "sandbox"
             signingConfig = signingConfigs.getByName("sandbox")
             buildConfigField("String", "URL_PORTAL_SITE", "\"https://sandbox.mabware.com\"")
         }
         create("develop") {
             dimension = "default"
-            applicationIdSuffix = "develop"
+            applicationIdSuffix = ".develop"
             versionNameSuffix = "develop"
             signingConfig = signingConfigs.getByName("develop")
             buildConfigField("String", "URL_PORTAL_SITE", "\"https://develop.mabware.com\"")
