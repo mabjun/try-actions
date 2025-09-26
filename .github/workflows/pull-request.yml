@@ -44,15 +44,15 @@ jobs:
 
             - run: echo 'github.ref_name:${{ github.ref_name }}'
 
-            # - name: 'Set up Ruby'
-            #   uses: ruby/setup-ruby@v1
-            #   with:
-            #     ruby-version: 3.0
+            - name: 'Set up Ruby'
+              uses: ruby/setup-ruby@v1
+              with:
+                ruby-version: 3.0
 
-            # - name: 'Gem install'
-            #   run: |
-            #     gem install danger
-            #     gem install danger-android_lint
+            - name: 'Gem install'
+              run: |
+                gem install danger
+                gem install danger-android_lint
 
             # - name: 'ショート SHA を取得'
             #   id: get_short_sha
@@ -75,10 +75,10 @@ jobs:
             - name: './gradlew lintDevelopDebug'
               run: ./gradlew lintDevelopDebug --no-daemon
 
-            - name: Check and report lint results
-              uses: hidakatsuya/action-report-android-lint@v1.2.3
-              with:
-                result-path: 'myapp/app/build/reports/lint-results-developDebug.xml'
+            # - name: Check and report lint results
+            #   uses: hidakatsuya/action-report-android-lint@v1.2.3
+            #   with:
+            #     result-path: 'myapp/app/build/reports/lint-results-developDebug.xml'
 
             # - uses: yutailang0119/action-android-lint@v5
             #   with:
@@ -86,10 +86,10 @@ jobs:
                #   ignore-warnings: false # Ignore Lint Warnings
    #               continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
       
-            # - name: 'Run danger'
-            #   env:
-            #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            #   run: danger
+            - name: 'Run danger'
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: danger
 
             # - name: 'Upload results'
             #   uses: actions/upload-artifact@v4
