@@ -44,15 +44,15 @@ jobs:
 
             - run: echo 'github.ref_name:${{ github.ref_name }}'
 
-            - name: 'Set up Ruby'
-              uses: ruby/setup-ruby@v1
-              with:
-                ruby-version: 3.0
+            # - name: 'Set up Ruby'
+            #   uses: ruby/setup-ruby@v1
+            #   with:
+            #     ruby-version: 3.0
 
-            - name: 'Gem install'
-              run: |
-                gem install danger
-                gem install danger-android_lint
+            # - name: 'Gem install'
+            #   run: |
+            #     gem install danger
+            #     gem install danger-android_lint
 
             # - name: 'ショート SHA を取得'
             #   id: get_short_sha
@@ -75,10 +75,16 @@ jobs:
             - name: './gradlew lintDevelopDebug'
               run: ./gradlew lintDevelopDebug --no-daemon
 
-            - name: 'Run danger'
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: danger
+            - uses: yutailang0119/action-android-lint@v4
+              with:
+                  report-path: build/reports/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
+                  ignore-warnings: true # Ignore Lint Warnings
+                  continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
+      
+            # - name: 'Run danger'
+            #   env:
+            #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   run: danger
 
             # - name: 'Upload results'
             #   uses: actions/upload-artifact@v4
