@@ -61,7 +61,7 @@ jobs:
             - name: 'Gem install'
               run: |
                 gem install danger
-                gem install danger-android_lint
+           #     gem install danger-android_lint
 
             - name: 'Run danger'
               env:
