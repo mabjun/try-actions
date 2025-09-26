@@ -75,14 +75,14 @@ jobs:
             - name: './gradlew lintDevelopDebug'
               run: ./gradlew lintDevelopDebug --no-daemon
 
-            # - name: Check and report lint results
-            #   uses: hidakatsuya/action-report-android-lint@v1.2.3
-            #   with:
-            #     result-path: 'app/build/reports/lint-results-debug.xml'
-
-            - uses: yutailang0119/action-android-lint@v5
+            - name: Check and report lint results
+              uses: hidakatsuya/action-report-android-lint@v1.2.3
               with:
-                  report-path: myapp/app/build/reports/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
+                result-path: 'app/build/reports/lint-results-developDebug.xml'
+
+            # - uses: yutailang0119/action-android-lint@v5
+            #   with:
+            #       report-path: myapp/app/build/reports/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
                #   ignore-warnings: false # Ignore Lint Warnings
    #               continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
       
