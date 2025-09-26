@@ -63,6 +63,11 @@ jobs:
                 gem install danger
            #     gem install danger-android_lint
 
+            - name: 'check'
+              run: |
+                pwd
+                ls -l
+
             - name: 'Run danger'
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
