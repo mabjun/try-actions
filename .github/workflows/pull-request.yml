@@ -69,13 +69,13 @@ jobs:
 
             - run: chmod +x ./gradlew
 
-            - name: 'versionName を取得'
-              run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
+            # - name: 'versionName を取得'
+            #   run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
    
-            - name: './gradlew lint'
-              run: ./gradlew lintDebug --no-daemon
+            - name: './gradlew lintDevelopDebug'
+              run: ./gradlew lintDevelopDebug --no-daemon
 
-            - name: 'Run dainger'
+            - name: 'Run danger'
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: danger
