@@ -39,16 +39,6 @@ jobs:
 
             - run: echo 'github.ref_name:${{ github.ref_name }}'
 
-            - name: 'Set up Ruby'
-              uses: ruby/setup-ruby@v1
-              with:
-                ruby-version: 2.6
-
-            - name: 'Gem install'
-              run: |
-                gem install danger
-                gem install danger-android_lint
-
             - name: 'キーストアを復元'
               run: |
                 echo "${{ secrets.GRADLE_PROPERTIES_BASE64 }}" | base64 -d > app/gradle.properties
@@ -61,6 +51,17 @@ jobs:
 
             - name: './gradlew lintDevelopDebug'
               run: ./gradlew lintDevelopDebug --no-daemon
+
+            - name: 'Set up Ruby'
+              uses: ruby/setup-ruby@v1
+              with:
+                ruby-version: 3.2.2
+                bundle-cache: false
+
+            - name: 'Gem install'
+              run: |
+                gem install danger
+                gem install danger-android_lint
 
             - name: 'Run danger'
               env:
