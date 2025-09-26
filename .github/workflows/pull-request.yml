@@ -44,6 +44,15 @@ jobs:
 
             - run: echo 'github.ref_name:${{ github.ref_name }}'
 
+            - name: 'Set up Ruby'
+              uses: actions/setup-ruby@v1
+              with:
+                ruby-version: 2.6
+            - name: 'Gem install'
+              run: |
+                gem install danger
+                gem install danger-android_lint
+
             # - name: 'ショート SHA を取得'
             #   id: get_short_sha
             #   run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
@@ -63,17 +72,22 @@ jobs:
               run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
    
             - name: './gradlew lint'
-              run: ./gradlew lint --no-daemon
+              run: ./gradlew lintDebug --no-daemon
 
-            - name: 'Upload results'
-              uses: actions/upload-artifact@v4
-              if: success() || failure()
-              with:
-                name: 'results'
-                path: |
-                  myapp/app/build/reports/lint-results-*.html
-                  myapp/app/build/reports/lint-results-*.xml
-                if-no-files-found: error
+            - name: 'Run dainger'
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: danger
+              
+            # - name: 'Upload results'
+            #   uses: actions/upload-artifact@v4
+            #   if: success() || failure()
+            #   with:
+            #     name: 'results'
+            #     path: |
+            #       myapp/app/build/reports/lint-results-*.html
+            #       myapp/app/build/reports/lint-results-*.xml
+            #     if-no-files-found: error
 
 
 #                  Wrote HTML report to file:///home/runner/work/try-actions/try-actions/myapp/app/build/reports/lint-results-developDebug.html
