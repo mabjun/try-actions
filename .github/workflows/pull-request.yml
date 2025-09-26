@@ -80,6 +80,7 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                OCTOKIT_SILENT: true
               run: danger
 
               # - name: Check and report lint results
