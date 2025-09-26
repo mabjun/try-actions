@@ -1,5 +1,6 @@
 
 name: Pull request
+
 on:
     workflow_dispatch:
     pull_request:
@@ -10,16 +11,16 @@ on:
           - ready_for_review
         branches:
           - develop
-##            - feature/202509/mabuchi/actYYY
-# なんども なんかプッっしゅ
+
+permissions:
+    id-token: write
+    contents: read
+    pull-requests: write
 
 jobs:
     pull-request:
         if: github.event.pull_request.draft == false
         runs-on: ubuntu-latest
-        # Releases への公開に書き込み権限が必要
-        permissions:
-            contents: write
         defaults:
             run:
                 working-directory: 'myapp'
@@ -75,7 +76,13 @@ jobs:
             - name: './gradlew lintDevelopDebug'
               run: ./gradlew lintDevelopDebug --no-daemon
 
-            # - name: Check and report lint results
+            - name: 'Run danger'
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: danger
+
+              # - name: Check and report lint results
             #   uses: hidakatsuya/action-report-android-lint@v1.2.3
             #   with:
             #     result-path: 'myapp/app/build/reports/lint-results-developDebug.xml'
@@ -86,24 +93,4 @@ jobs:
                #   ignore-warnings: false # Ignore Lint Warnings
    #               continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
       
-            - name: 'Run danger'
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: danger
-
-            # - name: 'Upload results'
-            #   uses: actions/upload-artifact@v4
-            #   if: success() || failure()
-            #   with:
-            #     name: 'results'
-            #     path: |
-            #       myapp/app/build/reports/lint-results-*.html
-            #       myapp/app/build/reports/lint-results-*.xml
-            #     if-no-files-found: error
-
-
-#                  Wrote HTML report to file:///home/runner/work/try-actions/try-actions/myapp/app/build/reports/lint-results-developDebug.html
-              
-
 
