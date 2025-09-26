@@ -75,10 +75,10 @@ jobs:
             - name: './gradlew lintDevelopDebug'
               run: ./gradlew lintDevelopDebug --no-daemon
 
-            - uses: yutailang0119/action-android-lint@v4
+            - uses: yutailang0119/action-android-lint@v5
               with:
-                  report-path: build/reports/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
-                  ignore-warnings: false # Ignore Lint Warnings
+                  report-path: app/build/reports/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
+               #   ignore-warnings: false # Ignore Lint Warnings
    #               continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
       
             # - name: 'Run danger'
