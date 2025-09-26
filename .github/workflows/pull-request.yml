@@ -45,9 +45,10 @@ jobs:
             - run: echo 'github.ref_name:${{ github.ref_name }}'
 
             - name: 'Set up Ruby'
-              uses: actions/setup-ruby@v1
+              uses: ruby/setup-ruby@v1
               with:
-                ruby-version: 2.6
+                ruby-version: 2.7
+                
             - name: 'Gem install'
               run: |
                 gem install danger
@@ -78,7 +79,7 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: danger
-              
+
             # - name: 'Upload results'
             #   uses: actions/upload-artifact@v4
             #   if: success() || failure()
