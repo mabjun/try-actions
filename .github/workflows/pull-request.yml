@@ -47,7 +47,7 @@ jobs:
             - name: 'Set up Ruby'
               uses: ruby/setup-ruby@v1
               with:
-                ruby-version: 3.0
+                ruby-version: 3.4
 
             - name: 'Gem install'
               run: |
@@ -105,32 +105,4 @@ jobs:
 #                  Wrote HTML report to file:///home/runner/work/try-actions/try-actions/myapp/app/build/reports/lint-results-developDebug.html
               
 
-            # - name: 'develop-debug.apk をリネーム'
-            #   run: |
-            #     APK_NAME="app/build/outputs/apk/develop/debug/app-develop-debug.apk"
-            #     NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
-            #     mv $APK_NAME $NEW_APK_NAME
-            #     ls -l "app/build/outputs/apk/develop/debug"
-
-            # - name: './gradlew assembleStagingDebug'
-            #   run: ./gradlew assembleStagingDebug --no-daemon
-            # - name: 'staging-debug.apk をリネーム'
-            #   run: |
-            #     APK_NAME="app/build/outputs/apk/staging/debug/app-staging-debug.apk"
-            #     NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
-            #     mv $APK_NAME $NEW_APK_NAME
-            #     ls -l "app/build/outputs/apk/staging/debug"
-
-            # - name: 'Github Release に APK を配置'
-            #   uses: softprops/action-gh-release@v2
-            #   with:
-            #     name: 'v${{ env.VERSION_NAME }}-production-release'
-            #     body: ''
-            #     tag_name: 'v${{ env.VERSION_NAME }}-production-release'
-            #     files: |
-            #         myapp/app/build/outputs/apk/develop/debug/*.apk
-            #         myapp/app/build/outputs/apk/staging/debug/*.apk
-            #         myapp/app/build/outputs/apk/sandbox/debug/*.apk
-            #         myapp/app/build/outputs/apk/production/release/*.apk
-            #         myapp/app/build/outputs/bundle/productionRelease/*.aab
 
