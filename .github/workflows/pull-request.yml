@@ -74,8 +74,8 @@ jobs:
               working-directory: ${{ github.workspace }}
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                OCTOKIT_SILENT: true
+#                DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                OCTOKIT_SILENT: true  # xxx のエラーメッセージ抑止のため
               run: danger
  
               # - name: Check and report lint results
