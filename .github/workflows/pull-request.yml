@@ -13,7 +13,7 @@ on:
           - develop
 
 permissions:
-#    id-token: write
+#    id-token: write xx
     contents: read
     pull-requests: write
 
