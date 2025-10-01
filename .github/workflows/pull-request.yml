@@ -57,11 +57,11 @@ jobs:
               run: ./gradlew lintDevelopDebug --no-daemon 
          #     run: ./gradlew assembleDevelopDebug 2>&1 | tee 'build.log'
 
-            - name: 'Set up Ruby'
-              uses: ruby/setup-ruby@v1
-              with:
-                ruby-version: 3.2.2
-                bundler-cache: false
+            # - name: 'Set up Ruby'
+            #   uses: ruby/setup-ruby@v1
+            #   with:
+            #     ruby-version: 3.2.2
+            #     bundler-cache: false
 
             - name: Install reviewdog
               uses: reviewdog/action-setup@v1
@@ -103,7 +103,7 @@ jobs:
                         print(f"{f}:{ln}: {sev}: [{iid}] {msg}")
                 PY
                 wc -l lint.out || true
-
+                cat lint.out
             - name: Report lint results with reviewdog
               if: always()
               env:
