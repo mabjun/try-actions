@@ -54,7 +54,7 @@ jobs:
             - run: chmod +x ./gradlew
 
             - name: './gradlew lintDevelopDebug'
-              run: ./gradlew lintDevelopDebug --no-daemon
+              run: ./gradlew lintDevelopDebug --continue
               continue-on-error: true
 
          #     run: ./gradlew assembleDevelopDebug 2>&1 | tee 'build.log'
@@ -72,7 +72,7 @@ jobs:
                 find . -regex '^.*/build/reports/lint-results.*\.sarif$' -type f | while read file_path; do
                   reviewdog -f=sarif -reporter=github-pr-review < "$file_path"
                 done
-
+                cat "$file_path"
 
             # - name: Convert Android Lint XML to efm lines
             #   if: always()

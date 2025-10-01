@@ -129,7 +129,7 @@ android {
 
         }
     }
-    
+
     lint {
         sarifReport = true
     }
