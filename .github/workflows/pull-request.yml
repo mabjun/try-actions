@@ -54,7 +54,7 @@ jobs:
             - run: chmod +x ./gradlew
 
             - name: './gradlew lintDevelopDebug'
-              run: ./gradlew lintDevelopDebug --no-daemon
+              run: ./gradlew lintDevelopDebug --no-daemon 
 
             - name: 'Set up Ruby'
               uses: ruby/setup-ruby@v1
@@ -65,7 +65,8 @@ jobs:
             - name: 'Gem install'
               run: |
                 gem install danger
-                gem install danger-android_lint
+                gem install danger-chikuwa
+#                gem install danger-android_lint
 
             - name: 'check'
               run: |
