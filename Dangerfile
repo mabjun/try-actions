@@ -17,4 +17,4 @@
 # android_lint.filtering = false
 # android_lint.lint
 
-chikuwa.report "build.log" #'myapp/app/build/reports/lint-results-developDebug.txt'
+chikuwa.report "myapp/build.log" #'myapp/app/build/reports/lint-results-developDebug.txt'
