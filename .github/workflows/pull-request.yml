@@ -74,7 +74,7 @@ jobs:
                 pwd
                 ls 'myapp/app/build/reports'
                 cat 'myapp/app/build/reports/lint-results-developDebug.sarif'
-                reviewdog -f=sarif -reporter=github-pr-check < 'myapp/app/build/reports/lint-results-developDebug.sarif'
+                reviewdog -f=sarif -filter-mode=nofilter -reporter=github-pr-check < 'myapp/app/build/reports/lint-results-developDebug.sarif'
   
               # find . -regex '^.*/build/reports/lint-results.*\.sarif$' -type f | while read file_path; do
               #   reviewdog -f=sarif -reporter=github-pr-review < "$file_path"
