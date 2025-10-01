@@ -129,6 +129,10 @@ android {
 
         }
     }
+    
+    lint {
+        sarifReport = true
+    }
 }
 
 private fun getLocalProperty(name: String): String {
