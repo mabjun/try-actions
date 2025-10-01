@@ -97,21 +97,21 @@ android {
         }
         create("staging") {
             dimension = "default"
-            applicationIdSuffix = "staging"
+            applicationIdSuffix =   "staging"
             versionNameSuffix = "staging"
             signingConfig = signingConfigs.getByName("staging")
             buildConfigField("String", "URL_PORTAL_SITE", "\"https://staging.mabware.com\"")
         }
         create("sandbox") {
             dimension = "default"
-            applicationIdSuffix = "sandbox"
+            applicationIdSuffix =   "sandbox"
             versionNameSuffix = "sandbox"
             signingConfig = signingConfigs.getByName("sandbox")
             buildConfigField("String", "URL_PORTAL_SITE", "\"https://sandbox.mabware.com\"")
         }
         create("develop") {
             dimension = "default"
-            applicationIdSuffix = "develop"
+            applicationIdSuffix =   "develop"
             versionNameSuffix = "develop"
             signingConfig = signingConfigs.getByName("develop")
             buildConfigField("String", "URL_PORTAL_SITE", "\"https://develop.mabware.com\"")
