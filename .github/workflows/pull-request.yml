@@ -62,6 +62,7 @@ jobs:
               with:
                 name: Lint 結果
                 path: 'app/build/reports/lint-results-developDebug.html'
+                compression-level: 0
 
          #     run: ./gradlew assembleDevelopDebug 2>&1 | tee 'build.log'
 
