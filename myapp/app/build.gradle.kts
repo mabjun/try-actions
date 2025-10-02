@@ -7,7 +7,7 @@ plugins {
 }
 
 android_lint_reporter {
-    lintFilePath = "./build/reports/lint-results-developDebug.xml"
+    lintFilePath = "./build/reports/lint-results-developDebug.html"
 //    detektFilePath = ""
     githubOwner = "worker8"
     githubRepositoryName = "AndroidLintReporter"
