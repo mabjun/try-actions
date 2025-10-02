@@ -58,7 +58,7 @@ jobs:
               continue-on-error: true
 
             - name: Upload artifacts
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                 name: Lint 結果
                 path: 'app/build/reports/lint-results-developDebug.html'
