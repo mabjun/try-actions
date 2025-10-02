@@ -61,9 +61,9 @@ jobs:
             - name: Upload artifacts
               uses: actions/upload-artifact@v4
               with:
-                name: Lint 結果
+                name: 'Android Lint Result'
                 path: 'myapp/app/build/reports/lint-results-developDebug.html'
-                compression-level: 0
+        
 
          #     run: ./gradlew assembleDevelopDebug 2>&1 | tee 'build.log'
 
