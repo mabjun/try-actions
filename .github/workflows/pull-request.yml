@@ -57,13 +57,13 @@ jobs:
               run: ./gradlew lintDevelopDebug --continue
               continue-on-error: true
 
-         #     run: ./gradlew assembleDevelopDebug 2>&1 | tee 'build.log'
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                name: Lint 結果
+                path: 'app/build/reports/lint-results-developDebug.html'
 
-            # - name: 'Set up Ruby'
-            #   uses: ruby/setup-ruby@v1
-            #   with:
-            #     ruby-version: 3.2.2
-            #     bundler-cache: false
+         #     run: ./gradlew assembleDevelopDebug 2>&1 | tee 'build.log'
 
             - uses: reviewdog/action-setup@v1
             - name: 'Run reviewdog'
@@ -71,7 +71,7 @@ jobs:
                 REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               working-directory: ${{ github.workspace }}
               run: |
-                reviewdog -f=sarif -reporter=github-pr-check -filter-mode=nofilter < 'myapp/app/build/reports/lint-results-developDebug.sarif'
+                reviewdog -f=sarif -reporter=github-pr-check < 'myapp/app/build/reports/lint-results-developDebug.sarif'
               # cat 'myapp/app/build/reports/lint-results-developDebug.sarif'
   
               # find . -regex '^.*/build/reports/lint-results.*\.sarif$' -type f | while read file_path; do
@@ -129,6 +129,11 @@ jobs:
             #       -fail-on-error=false \
             #       < lint.out
 
+            - name: 'Set up Ruby'
+              uses: ruby/setup-ruby@v1
+              with:
+                ruby-version: 3.2.2
+                bundler-cache: false
 
             # - uses: MeilCli/danger-action@v5
               # with:
@@ -140,24 +145,24 @@ jobs:
               #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-#             - name: 'Gem install'
-#               run: |
-#                 gem install danger
-#                # gem install danger-chikuwa
-# #                gem install danger-android_lint
+            - name: 'Gem install'
+              run: |
+                gem install danger
+                gem install danger-sarif
+#                gem install danger-android_lint
 
 #             - name: 'check'
 #               run: |
 #                 pwd
 #                 ls -l
 
-#             - name: 'Run danger'
-#               working-directory: ${{ github.workspace }}
-#               env:
-#                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#                  DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-# #                OCTOKIT_SILENT: true  # xxx のエラーメッセージ抑止のため
-#               run: danger
+            - name: 'Run danger'
+              working-directory: ${{ github.workspace }}
+              env:
+                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                #  DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#                OCTOKIT_SILENT: true  # xxx のエラーメッセージ抑止のため
+              run: danger
  
               # - name: Check and report lint results
             #   uses: hidakatsuya/action-report-android-lint@v1.2.3
