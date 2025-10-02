@@ -3,6 +3,15 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.worker8.android_lint_reporter")
+}
+
+android_lint_reporter {
+    lintFilePath = "./app/build/reports/lint-results.xml"
+    detektFilePath = ".app/build/reports/detekt_reports.xml"
+    githubOwner = "worker8"
+    githubRepositoryName = "AndroidLintReporter"
+    showLog = true // optional - default to false, show extra information, will slow things down
 }
 
 android {
