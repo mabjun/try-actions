@@ -8,7 +8,7 @@ plugins {
 
 android_lint_reporter {
     lintFilePath = "./build/reports/lint-results-developDebug.xml"
-    detektFilePath = ""
+//    detektFilePath = ""
     githubOwner = "worker8"
     githubRepositoryName = "AndroidLintReporter"
     showLog = true // optional - default to false, show extra information, will slow things down
