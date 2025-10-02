@@ -166,12 +166,12 @@ jobs:
 #                OCTOKIT_SILENT: true  # xxx のエラーメッセージ抑止のため
               run: danger
  
-            - name: Run Android Lint Reporter to report Lint and Detekt result to PR 
-              env:
-                PR_NUMBER: ${{ github.event.number }}
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: |
-                ./gradlew report -PgithubPullRequestId=$PR_NUMBER -PgithubToken=$GITHUB_TOKEN --warning-mode all
+            # - name: Run Android Lint Reporter to report Lint and Detekt result to PR 
+            #   env:
+            #     PR_NUMBER: ${{ github.event.number }}
+            #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   run: |
+            #     ./gradlew report -PgithubPullRequestId=$PR_NUMBER -PgithubToken=$GITHUB_TOKEN --warning-mode all
 
             - name: 'Code Scanner'
               uses: github/codeql-action/upload-sarif@v3
