@@ -173,6 +173,11 @@ jobs:
               run: |
                 ./gradlew report -PgithubPullRequestId=$PR_NUMBER -PgithubToken=$GITHUB_TOKEN --warning-mode all
 
+            - name: 'Code Scanner'
+              uses: github/codeql-action/upload-sarif@v3
+              with:
+                sarif_file: myapp/app/build/reports/lint-results-developDebug.sarif
+
               # - name: Check and report lint results
             #   uses: hidakatsuya/action-report-android-lint@v1.2.3
             #   with:
