@@ -127,7 +127,7 @@ android {
         }
         create("local") {
             dimension = "default"
-            applicationIdSuffix = ".local"
+            applicationIdSuffix = "local"
             versionNameSuffix = "local"
             signingConfig = signingConfigs.getByName("develop")
             buildConfigField(
