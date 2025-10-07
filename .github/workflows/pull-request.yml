@@ -191,11 +191,10 @@ jobs:
       
 
             - name: 'Slack'
-              uses: rtCamp/action-slack-notify
+              uses: rtCamp/action-slack-notify@v2.2.2
               if: success()
               env:
                 SLACK_USERNAME: 'pull request notifier'
                 SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
                 SLACK_TITLE: '通知だよ'
                 SLACK_MESSAGE: 'プルリクが作成されました :thumbsup: ${{ env.SLACK_USERNAME }}'
-                
