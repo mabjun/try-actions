@@ -190,3 +190,12 @@ jobs:
    #               continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
       
 
+            - name: 'Slack'
+              uses: rtCamp/action-slack-notify
+              if: success()
+              env:
+                SLACK_USERNAME: 'pull request notifier'
+                SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
+                SLACK_TITLE: '通知だよ'
+                SLACK_MESSAGE: 'プルリクが作成されました :thumbsup: ${{ env.SLACK_USERNAME }}'
+                
