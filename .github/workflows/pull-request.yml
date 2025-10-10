@@ -212,4 +212,4 @@ jobs:
                 SLACK_USERNAME: 'mabware-android'
                 SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
                 SLACK_TITLE: '通知だよ'
-                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: [ ${{ env.SLACK_USERNAME }} ] <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>'
+                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}> [ ${{ env.SLACK_USERNAME }} ]'
