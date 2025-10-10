@@ -147,24 +147,24 @@ jobs:
               #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-            - name: 'Gem install'
-              run: |
-                gem install danger
-                gem install danger-sarif
-                gem install danger-android_lint
+            # - name: 'Gem install'
+            #   run: |
+            #     gem install danger
+            #     gem install danger-sarif
+            #     gem install danger-android_lint
 
 #             - name: 'check'
 #               run: |
 #                 pwd
 #                 ls -l
 
-            - name: 'Run danger'
-              working-directory: ${{ github.workspace }}
-              env:
-                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                #  DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#                OCTOKIT_SILENT: true  # xxx のエラーメッセージ抑止のため
-              run: danger
+#             - name: 'Run danger'
+#               working-directory: ${{ github.workspace }}
+#               env:
+#                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#                 #  DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# #                OCTOKIT_SILENT: true  # xxx のエラーメッセージ抑止のため
+#               run: danger
  
             # - name: Run Android Lint Reporter to report Lint and Detekt result to PR 
             #   env:
@@ -209,5 +209,4 @@ jobs:
                 SLACK_USERNAME: 'pull request notifier'
                 SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
                 SLACK_TITLE: '通知だよ'
-                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: ${{ env.SLACK_USERNAME }}\
-                 <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>'
+                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: [ ${{ env.SLACK_USERNAME }} ] <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>'
