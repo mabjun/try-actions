@@ -27,7 +27,7 @@ jobs:
             run:
               working-directory: 'myapp'
         env:
-          SLACK_USERNAME: 'pull-request-notifier'
+          SLACK_USERNAME: 'github'
 
         steps:
             - name: 'Checkout'
@@ -205,11 +205,13 @@ jobs:
               if: ${{ github.event.action == 'ready_for_review' }}
               run: echo 'EVENT_MSG=レビュー待ち' >> $GITHUB_ENV
 
+            - run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
+
             - name: 'Slack'
               uses: rtCamp/action-slack-notify@v2.2.0
               if: success()
               env:
-                SLACK_USERNAME: 'mabware-android'
+                SLACK_USERNAME: 'github'
                 SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
                 SLACK_TITLE: '通知だよ'
-                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}> [ ${{ env.SLACK_USERNAME }} ]'
+                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}> [ ${{ env.REPOSITORY_NAME }} ]'
