@@ -25,7 +25,10 @@ jobs:
         runs-on: ubuntu-latest
         defaults:
             run:
-                working-directory: 'myapp'
+              working-directory: 'myapp'
+        env:
+          SLACK_USERNAME: 'pull-request-notifier'
+
         steps:
             - name: 'Checkout'
               uses: actions/checkout@v5
@@ -67,13 +70,13 @@ jobs:
 
          #     run: ./gradlew assembleDevelopDebug 2>&1 | tee 'build.log'
 
-            - uses: reviewdog/action-setup@v1
-            - name: 'Run reviewdog'
-              env:
-                REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              working-directory: ${{ github.workspace }}
-              run: |
-                reviewdog -f=sarif -reporter=github-pr-check < 'myapp/app/build/reports/lint-results-developDebug.sarif'
+            # - uses: reviewdog/action-setup@v1
+            # - name: 'Run reviewdog'
+            #   env:
+            #     REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   working-directory: ${{ github.workspace }}
+            #   run: |
+            #     reviewdog -f=sarif -reporter=github-pr-check < 'myapp/app/build/reports/lint-results-developDebug.sarif'
               # cat 'myapp/app/build/reports/lint-results-developDebug.sarif'
   
               # find . -regex '^.*/build/reports/lint-results.*\.sarif$' -type f | while read file_path; do
@@ -131,11 +134,11 @@ jobs:
             #       -fail-on-error=false \
             #       < lint.out
 
-            - name: 'Set up Ruby'
-              uses: ruby/setup-ruby@v1
-              with:
-                ruby-version: 3.2.2
-                bundler-cache: false
+            # - name: 'Set up Ruby'
+            #   uses: ruby/setup-ruby@v1
+            #   with:
+            #     ruby-version: 3.2.2
+            #     bundler-cache: false
 
             # - uses: MeilCli/danger-action@v5
               # with:
@@ -206,7 +209,7 @@ jobs:
               uses: rtCamp/action-slack-notify@v2.2.0
               if: success()
               env:
-                SLACK_USERNAME: 'pull request notifier'
+                SLACK_USERNAME: 'mabware-android'
                 SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
                 SLACK_TITLE: '通知だよ'
                 SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: [ ${{ env.SLACK_USERNAME }} ] <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>'
