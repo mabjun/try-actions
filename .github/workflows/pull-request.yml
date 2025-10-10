@@ -189,6 +189,18 @@ jobs:
                #   ignore-warnings: false # Ignore Lint Warnings
    #               continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
       
+            - name: 'opened'
+              if: ${{ github.event_name == 'opened' }}
+              run: echo 'EVENT_MSG=作成' >> $GITHUB_ENV
+            - name: 'synchronize'
+              if: ${{ github.event_name == 'synchronize' }}
+              run: echo 'EVENT_MSG=更新' >> $GITHUB_ENV
+            - name: 'opened'
+              if: ${{ github.event_name == 'reopened' }}
+              run: echo 'EVENT_MSG=再オープン' >> $GITHUB_ENV
+            - name: 'opened'
+              if: ${{ github.event_name == 'ready_for_review' }}
+              run: echo 'EVENT_MSG=レビュー待ち' >> $GITHUB_ENV
 
             - name: 'Slack'
               uses: rtCamp/action-slack-notify@v2.2.0
@@ -197,4 +209,4 @@ jobs:
                 SLACK_USERNAME: 'pull request notifier'
                 SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
                 SLACK_TITLE: '通知だよ'
-                SLACK_MESSAGE: 'プルリクが作成されました :thumbsup: ${{ env.SLACK_USERNAME }}'
+                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: ${{ env.SLACK_USERNAME }}'
