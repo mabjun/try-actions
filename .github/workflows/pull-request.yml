@@ -209,4 +209,4 @@ jobs:
                 SLACK_USERNAME: 'pull request notifier'
                 SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
                 SLACK_TITLE: '通知だよ'
-                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: ${{ env.SLACK_USERNAME }}'
+                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: ${{ env.SLACK_USERNAME }}\n <${{ github.event.pull_request.html_url }}|プルリク>'
