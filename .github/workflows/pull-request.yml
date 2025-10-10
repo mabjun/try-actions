@@ -190,16 +190,16 @@ jobs:
    #               continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
       
             - name: 'opened'
-              if: ${{ github.event_name == 'opened' }}
+              if: ${{ github.event.action == 'opened' }}
               run: echo 'EVENT_MSG=作成' >> $GITHUB_ENV
             - name: 'synchronize'
-              if: ${{ github.event_name == 'synchronize' }}
+              if: ${{ github.event.action == 'synchronize' }}
               run: echo 'EVENT_MSG=更新' >> $GITHUB_ENV
             - name: 'opened'
-              if: ${{ github.event_name == 'reopened' }}
+              if: ${{ github.event.action == 'reopened' }}
               run: echo 'EVENT_MSG=再オープン' >> $GITHUB_ENV
-            - name: 'opened'
-              if: ${{ github.event_name == 'ready_for_review' }}
+            - name: 'ready_for_review'
+              if: ${{ github.event.action == 'ready_for_review' }}
               run: echo 'EVENT_MSG=レビュー待ち' >> $GITHUB_ENV
 
             - name: 'Slack'
