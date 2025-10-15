@@ -1,20 +1,34 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.worker8.android_lint_reporter")
+}
+
+android_lint_reporter {
+    lintFilePath = "./build/reports/lint-results-developDebug.xml"
+//    detektFilePath = ""
+    githubOwner = "worker8"
+    githubRepositoryName = "AndroidLintReporter"
+    showLog = true // optional - default to false, show extra information, will slow things down
 }
 
 android {
     namespace = "com.example.myapplication"
+    //noinspection GradleDependency
     compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.myapplication"
         minSdk = 28
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     signingConfigs {
@@ -60,6 +74,9 @@ android {
         }
     }
     buildTypes {
+        debug {
+            signingConfig = null
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -77,6 +94,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     flavorDimensions += listOf("default")
@@ -84,25 +102,56 @@ android {
         create("production") {
             dimension = "default"
             signingConfig = signingConfigs.getByName("production")
+            buildConfigField("String", "URL_PORTAL_SITE", "\"https://production.mabware.com\"")
         }
         create("staging") {
             dimension = "default"
-            applicationIdSuffix = "staging"
+            applicationIdSuffix =   "staging"
             versionNameSuffix = "staging"
             signingConfig = signingConfigs.getByName("staging")
+            buildConfigField("String", "URL_PORTAL_SITE", "\"https://staging.mabware.com\"")
         }
         create("sandbox") {
             dimension = "default"
-            applicationIdSuffix = "sandbox"
+            applicationIdSuffix =   "sandbox"
             versionNameSuffix = "sandbox"
             signingConfig = signingConfigs.getByName("sandbox")
+            buildConfigField("String", "URL_PORTAL_SITE", "\"https://sandbox.mabware.com\"")
         }
         create("develop") {
             dimension = "default"
-            applicationIdSuffix = "develop"
+            applicationIdSuffix =   "develop"
             versionNameSuffix = "develop"
             signingConfig = signingConfigs.getByName("develop")
+            buildConfigField("String", "URL_PORTAL_SITE", "\"https://develop.mabware.com\"")
         }
+        create("local") {
+            dimension = "default"
+            applicationIdSuffix = "local"
+            versionNameSuffix = "local"
+            signingConfig = signingConfigs.getByName("develop")
+            buildConfigField(
+                "String",
+                "URL_PORTAL_SITE",
+                "\"${getLocalProperty("URL_PORTAL_SITE")}\""
+            )
+
+        }
+    }
+
+    lint {
+        sarifReport = true
+    }
+}
+
+private fun getLocalProperty(name: String): String {
+    val localPropertiesFile = rootProject.file("local.properties")
+    return if (localPropertiesFile.exists()) {
+        Properties().apply {
+            load(localPropertiesFile.inputStream())
+        }.getProperty(name)
+    } else {
+        ""
     }
 }
 

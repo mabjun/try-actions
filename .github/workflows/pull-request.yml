@@ -1,0 +1,217 @@
+
+name: Pull request
+
+on:
+    workflow_dispatch:
+    pull_request:
+        types:
+          - opened
+          - synchronize
+          - reopened
+          - ready_for_review
+        branches:
+          - develop
+
+permissions:
+#    id-token: write xx
+    issues: read
+    statuses: write
+    contents: read
+    pull-requests: write
+
+jobs:
+    pull-request:
+        if: github.event.pull_request.draft == false
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+              working-directory: 'myapp'
+        env:
+          SLACK_USERNAME: 'github'
+
+        steps:
+            - name: 'Checkout'
+              uses: actions/checkout@v5
+              with:
+                fetch-depth: 0
+
+            - name: "Setup Java"
+              uses: actions/setup-java@v5
+              with:
+                java-version: '17'
+                distribution: 'temurin'
+
+            - name: 'Setup gradle'
+              uses: gradle/actions/setup-gradle@v4
+
+            - run: echo 'github.ref_name:${{ github.ref_name }}'
+
+            - name: 'キーストアを復元'
+              run: |
+                echo "${{ secrets.GRADLE_PROPERTIES_BASE64 }}" | base64 -d > app/gradle.properties
+                echo "${{ secrets.DEVELOP_KEY_BASE64 }}" | base64 -d > app/developKey.jks
+                echo "${{ secrets.STAGING_KEY_BASE64 }}" | base64 -d > app/stagingKey.jks
+                echo "${{ secrets.SANDBOX_KEY_BASE64 }}" | base64 -d > app/sandboxKey.jks
+                echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
+
+            - run: chmod +x ./gradlew
+
+            - name: './gradlew lintDevelopDebug'
+              run: ./gradlew lintDevelopDebug --continue
+              continue-on-error: true
+
+            - run: pwd && ls app/build/reports
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: 'Android Lint Result'
+                path: 'myapp/app/build/reports/lint-results-developDebug.html'
+        
+
+         #     run: ./gradlew assembleDevelopDebug 2>&1 | tee 'build.log'
+
+            # - uses: reviewdog/action-setup@v1
+            # - name: 'Run reviewdog'
+            #   env:
+            #     REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   working-directory: ${{ github.workspace }}
+            #   run: |
+            #     reviewdog -f=sarif -reporter=github-pr-check < 'myapp/app/build/reports/lint-results-developDebug.sarif'
+              # cat 'myapp/app/build/reports/lint-results-developDebug.sarif'
+  
+              # find . -regex '^.*/build/reports/lint-results.*\.sarif$' -type f | while read file_path; do
+              #   reviewdog -f=sarif -reporter=github-pr-review < "$file_path"
+              # done
+
+            # - name: Convert Android Lint XML to efm lines
+            #   if: always()
+            #   run: |
+            #     set -euo pipefail
+            #     python3 <<'PY' > lint.out
+            #     import glob, xml.etree.ElementTree as ET, sys
+            #     files = glob.glob("**/lint-results-*.xml", recursive=True)
+            #     if not files:
+            #       sys.exit(0)
+            #     sev_map = {"Error":"e", "Fatal":"e", "Warning":"w", "Information":"i", "Informational":"i", "Ignore":"i"}
+            #     for xml_path in files:
+            #       try:
+            #         root = ET.parse(xml_path).getroot()
+            #       except Exception as e:
+            #         print(f"# failed to parse {xml_path}: {e}", file=sys.stderr)
+            #         continue
+            #       for issue in root.findall("issue"):
+            #         iid = issue.get("id","UNKNOWN")
+            #         msg = issue.get("message","").replace("\n"," ").strip()
+            #         sev = sev_map.get(issue.get("severity","Warning"), "w")
+            #         locs = issue.findall("location")
+            #         if not locs:
+            #           f = issue.get("file", xml_path)
+            #           ln = issue.get("line","1")
+            #           print(f"{f}:{ln}: {sev}: [{iid}] {msg}")
+            #           continue
+            #         for loc in locs:
+            #           f = loc.get("file", xml_path)
+            #           ln = loc.get("line","1")
+            #           col = loc.get("column")
+            #           if col:
+            #             print(f"{f}:{ln}:{col}: {sev}: [{iid}] {msg}")
+            #           else:
+            #             print(f"{f}:{ln}: {sev}: [{iid}] {msg}")
+            #     PY
+            #     wc -l lint.out || true
+            #     cat lint.out
+            # - name: Report lint results with reviewdog
+            #   if: always()
+            #   env:
+            #     REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   run: |
+            #     reviewdog \
+            #       -efm="%f:%l:%c: %t: %m" \
+            #       -efm="%f:%l: %t: %m" \
+            #       -name="Android Lint" \
+            #       -reporter=github-pr-review \
+            #       -level=warning \
+            #       -fail-on-error=false \
+            #       < lint.out
+
+            # - name: 'Set up Ruby'
+            #   uses: ruby/setup-ruby@v1
+            #   with:
+            #     ruby-version: 3.2.2
+            #     bundler-cache: false
+
+            # - uses: MeilCli/danger-action@v5
+              # with:
+              #   plugins_file: 'Gemfile'
+              #   install_path: 'vendor/bundle'
+              #   danger_file: 'Dangerfile'
+              #   danger_id: 'danger-pr'
+              # env:
+              #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+            # - name: 'Gem install'
+            #   run: |
+            #     gem install danger
+            #     gem install danger-sarif
+            #     gem install danger-android_lint
+
+#             - name: 'check'
+#               run: |
+#                 pwd
+#                 ls -l
+
+#             - name: 'Run danger'
+#               working-directory: ${{ github.workspace }}
+#               env:
+#                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#                 #  DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# #                OCTOKIT_SILENT: true  # xxx のエラーメッセージ抑止のため
+#               run: danger
+ 
+            # - name: Run Android Lint Reporter to report Lint and Detekt result to PR 
+            #   env:
+            #     PR_NUMBER: ${{ github.event.number }}
+            #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   run: |
+            #     ./gradlew report -PgithubPullRequestId=$PR_NUMBER -PgithubToken=$GITHUB_TOKEN --warning-mode all
+
+            - name: 'Code Scanner'
+              uses: github/codeql-action/upload-sarif@v3
+              with:
+                sarif_file: myapp/app/build/reports/lint-results-developDebug.sarif
+
+              # - name: Check and report lint results
+            #   uses: hidakatsuya/action-report-android-lint@v1.2.3
+            #   with:
+            #     result-path: 'myapp/app/build/reports/lint-results-developDebug.xml'
+
+            # - uses: yutailang0119/action-android-lint@v5
+            #   with:
+            #       report-path: myapp/app/build/reports/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
+               #   ignore-warnings: false # Ignore Lint Warnings
+   #               continue-on-error: false # If annotations contain error of severity, action-android-lint exit 1.
+      
+            - name: 'opened'
+              if: ${{ github.event.action == 'opened' }}
+              run: echo 'EVENT_MSG=作成' >> $GITHUB_ENV
+            - name: 'synchronize'
+              if: ${{ github.event.action == 'synchronize' }}
+              run: echo 'EVENT_MSG=更新' >> $GITHUB_ENV
+            - name: 'opened'
+              if: ${{ github.event.action == 'reopened' }}
+              run: echo 'EVENT_MSG=再オープン' >> $GITHUB_ENV
+            - name: 'ready_for_review'
+              if: ${{ github.event.action == 'ready_for_review' }}
+              run: echo 'EVENT_MSG=レビュー待ち' >> $GITHUB_ENV
+
+            - run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
+
+            - name: 'Slack'
+              uses: rtCamp/action-slack-notify@v2.2.0
+              if: success()
+              env:
+                SLACK_USERNAME: 'github'
+                SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
+                SLACK_TITLE: '通知だよ'
+                SLACK_MESSAGE: 'プルリク${{ env.EVENT_MSG }} :thumbsup: <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}> [ ${{ env.REPOSITORY_NAME }} ]'

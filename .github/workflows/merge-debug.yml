@@ -1,13 +1,21 @@
 
-name: Build debug
+name: Merge debug
 on:
     workflow_dispatch:
+      inputs:
+        target-environment:
+          type: choice
+          description: 'feature ブランチで動かす場合に指定'
+          options:
+            - "develop"
+            - "staging"
+            - "sandbox"
     push:
         branches:
             - develop
             - staging
             - sandbox
-            - feature/202509/mabuchi/act1
+#            - feature/202509/mabuchi/act1
 
 jobs:
     build-debug:
@@ -40,19 +48,19 @@ jobs:
             - run: echo 'github.ref_name:${{ github.ref_name }}'
 
             - name: 'develop ブランチ用の env を設定'
-              if: github.ref_name == 'develop' || contains(github.ref_name, 'act1')
+              if: github.ref_name == 'develop' || inputs.target-environment == 'develop'
               run: | 
                 echo "BRANCH=develop" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Develop" >> $GITHUB_ENV
 
             - name: 'staging ブランチの用の env を設定'
-              if: github.ref_name == 'staging' || contains(github.ref_name, 'for_debug_actions_at_other_branch')
+              if: github.ref_name == 'staging' || inputs.target-environment == 'staging'
               run: | 
                 echo "BRANCH=staging" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Staging" >> $GITHUB_ENV
 
             - name: 'sandbox ブランチの用の env を設定'
-              if: github.ref_name == 'sandbox' || contains(github.ref_name, 'for_debug_actions_at_other_branch')
+              if: github.ref_name == 'sandbox' || inputs.target-environment == 'sandbox'
               run: | 
                 echo "BRANCH=sandbox" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Sandbox" >> $GITHUB_ENV
