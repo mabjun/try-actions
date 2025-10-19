@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null)
                 .setAnchorView(R.id.fab).show()
         }
-        Log.d("MainActivity", "log-200-03")
+        Log.d("MainActivity", "log-202-02")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
