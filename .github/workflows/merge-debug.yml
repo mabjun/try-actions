@@ -103,12 +103,13 @@ jobs:
                 ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
             - name: 'make tag'
-              run: echo 'TAG_NAME=${{ env.VERSION_NAME }}-${{ env.BUILD_TYPE }}-${{ env.BRANCH }}' >> $GITHUB_ENV
+              run: echo 'TAG_NAME=${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}' >> $GITHUB_ENV
 
             - name: 'delete tag'
+              continue-on-error: true
               run: git push --delete origin v${{ env.TAG_NAME }}
               # エラーは無視する。
-              
+
             - name: 'Github Release に APK を配置する'
               uses: softprops/action-gh-release@v2
               with:
