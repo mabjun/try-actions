@@ -46,7 +46,9 @@ jobs:
               uses: gradle/actions/setup-gradle@v4
 
             - run: echo 'github.ref_name:${{ github.ref_name }}'
-
+            - run: echo 'github.ref:${{ github.ref }}'
+            - run: echo 'github.ref_type:${{ github.ref_type }}'
+            
             - name: 'develop ブランチ用の env を設定'
               if: github.ref_name == 'develop' || inputs.target-environment == 'develop'
               run: | 
