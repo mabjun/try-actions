@@ -10,7 +10,7 @@ on:
           - reopened
           - ready_for_review
         branches:
-          - develop
+          - Xdevelop
 
 permissions:
 #    id-token: write xx
