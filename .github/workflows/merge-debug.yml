@@ -48,7 +48,8 @@ jobs:
             - run: echo 'github.ref_name:${{ github.ref_name }}'
             - run: echo 'github.ref:${{ github.ref }}'
             - run: echo 'github.ref_type:${{ github.ref_type }}'
-            
+            - run: echo 'github.sha:${{ github.sha }}'
+
             - name: 'develop ブランチ用の env を設定'
               if: github.ref_name == 'develop' || inputs.target-environment == 'develop'
               run: | 
@@ -107,6 +108,7 @@ jobs:
                 name: 'v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
                 body: ''
                 tag_name: 'v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
+                target_commitish: '${{ github.sha }}'
                 files: |
                     myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/*.apk
 
