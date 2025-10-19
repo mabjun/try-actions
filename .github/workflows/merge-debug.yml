@@ -124,6 +124,7 @@ jobs:
                 name: '${{ env.TAG_NAME }}'
                 tag_name: '${{ env.TAG_NAME }}'
               #  target_commitish: '${{ github.sha }}'
+                draft: false
                 files: |
                     myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/*.apk
 
