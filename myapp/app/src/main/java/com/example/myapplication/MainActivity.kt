@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null)
                 .setAnchorView(R.id.fab).show()
         }
-        Log.d("MainActivity", "log-202-02")
+        Log.d("MainActivity", "log-202-タグ問題解消版！のはず")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
