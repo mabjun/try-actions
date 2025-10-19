@@ -102,12 +102,18 @@ jobs:
                 mv $APK_NAME $NEW_APK_NAME
                 ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
+            - name: 'make tag'
+              run: echo 'TAG_NAME=${{ env.VERSION_NAME }}-${{ env.BUILD_TYPE }}-${{ env.BRANCH }}' >> $GITHUB_ENV
+
+            - name: 'delete tag'
+              run: git push --delete origin v${{ env.TAG_NAME }}
+              # エラーは無視する。
+              
             - name: 'Github Release に APK を配置する'
               uses: softprops/action-gh-release@v2
               with:
-                name: 'v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
-                body: ''
-                tag_name: 'v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
+                name: 'v${{ env.TAG_NAME }}'
+                tag_name: 'v${{ env.TAG_NAME }}'
                 target_commitish: '${{ github.sha }}'
                 files: |
                     myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/*.apk
