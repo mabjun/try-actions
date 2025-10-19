@@ -108,11 +108,12 @@ jobs:
             - name: 'delete tag'
               continue-on-error: true
               run: |
+                git fetch --tags
                 git tag -d ${{ env.TAG_NAME }}
                 git push --delete origin ${{ env.TAG_NAME }}
               # エラーは無視する。
 
-            - name: 'tag'
+            - name: 'tag 付け'
               run: |
                 git tag ${{ env.TAG_NAME }}
                 git push origin ${{ env.TAG_NAME }}
