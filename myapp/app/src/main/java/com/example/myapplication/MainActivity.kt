@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null)
                 .setAnchorView(R.id.fab).show()
         }
-        Log.d("MainActivity", "log-202-タグ問題解消版！のはず。これで良さそうかな")
+        Log.d("MainActivity", "log-202-タグ問題解消版！のはず。これで良さそうかな。SHAをつけたらしい。")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
