@@ -68,10 +68,11 @@ jobs:
                 echo "BRANCH=sandbox" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Sandbox" >> $GITHUB_ENV
 
-            # - name: 'ショート SHA を取得'
-            #   id: get_short_sha
-            #   run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
-            # - run: echo "SHA:${{ env.SHORT_SHA }}"
+            - name: 'ショート SHA を取得'
+              id: get_short_sha
+              run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
+
+            - run: echo "SHA:${{ env.SHORT_SHA }}"
 
             - name: 'キーストアを復元'
               run: |
@@ -103,7 +104,7 @@ jobs:
                 ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
             - name: 'generate tag name'
-              run: echo 'TAG_NAME=v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}' >> $GITHUB_ENV
+              run: echo 'TAG_NAME=v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}-${{ env.SHORT_SHA }}' >> $GITHUB_ENV
 
             - name: 'delete tag'
               continue-on-error: true
