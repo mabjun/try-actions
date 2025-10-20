@@ -15,7 +15,7 @@ on:
             - develop
             - staging
             - sandbox
-#            - feature/202509/mabuchi/act1
+            - feature/act2
 
 jobs:
     build-debug:
