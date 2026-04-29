@@ -1,0 +1,112 @@
+
+name: Merge release
+on:
+    push:
+        branches:
+            - main
+##            - feature/202509/mabuchi/actYYY
+
+jobs:
+    build-release:
+        runs-on: ubuntu-latest
+        # Releases への公開に書き込み権限が必要
+        permissions:
+            contents: write
+        defaults:
+            run:
+                working-directory: 'myapp'
+        env:
+            BRANCH: 'production'
+            BRANCH_CAMEL: 'Production'
+            BUILD_TYPE: 'release'
+            BUILD_TYPE_CAMEL: 'Release'
+
+        steps:
+            - name: 'Checkout'
+              uses: actions/checkout@v5
+
+            - name: "Setup Java"
+              uses: actions/setup-java@v5
+              with:
+                java-version: '17'
+                distribution: 'temurin'
+                cache: 'gradle'
+
+            - run: echo 'github.ref_name:${{ github.ref_name }}'
+
+            # - name: 'ショート SHA を取得'
+            #   id: get_short_sha
+            #   run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
+            # - run: echo "SHA:${{ env.SHORT_SHA }}"
+
+            - name: 'キーストアを復元'
+              run: |
+                echo "${{ secrets.GRADLE_PROPERTIES_BASE64 }}" | base64 -d > app/gradle.properties
+                echo "${{ secrets.DEVELOP_KEY_BASE64 }}" | base64 -d > app/developKey.jks
+                echo "${{ secrets.STAGING_KEY_BASE64 }}" | base64 -d > app/stagingKey.jks
+                echo "${{ secrets.SANDBOX_KEY_BASE64 }}" | base64 -d > app/sandboxKey.jks
+                echo "${{ secrets.PRODUCTION_KEY_BASE64 }}" | base64 -d > app/productionKey.jks
+
+            - run: chmod +x ./gradlew
+
+            - name: 'versionName を取得'
+              run: echo "VERSION_NAME=$( ./gradlew -q app:printVersionName )" >> $GITHUB_ENV
+   
+            - name: './gradlew assembleDevelopDebug'
+              run: ./gradlew assembleDevelopDebug --no-daemon
+            - name: 'develop-debug.apk をリネーム'
+              run: |
+                APK_NAME="app/build/outputs/apk/develop/debug/app-develop-debug.apk"
+                NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
+                mv $APK_NAME $NEW_APK_NAME
+                ls -l "app/build/outputs/apk/develop/debug"
+
+            - name: './gradlew assembleStagingDebug'
+              run: ./gradlew assembleStagingDebug --no-daemon
+            - name: 'staging-debug.apk をリネーム'
+              run: |
+                APK_NAME="app/build/outputs/apk/staging/debug/app-staging-debug.apk"
+                NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
+                mv $APK_NAME $NEW_APK_NAME
+                ls -l "app/build/outputs/apk/staging/debug"
+
+            - name: './gradlew assembleSandboxDebug'
+              run: ./gradlew assembleSandboxDebug --no-daemon
+            - name: 'sandbox-debug.apk をリネーム'
+              run: |
+                APK_NAME="app/build/outputs/apk/sandbox/debug/app-sandbox-debug.apk"
+                NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
+                mv $APK_NAME $NEW_APK_NAME
+                ls -l "app/build/outputs/apk/sandbox/debug"
+
+            - name: './gradlew assembleProductionRelease'
+              run: ./gradlew assembleProductionRelease --no-daemon
+            - name: 'production-release.apk をリネーム'
+              run: |
+                APK_NAME="app/build/outputs/apk/production/release/app-production-release.apk"
+                NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
+                mv $APK_NAME $NEW_APK_NAME
+                ls -l "app/build/outputs/apk/production/release"
+
+            - name: './gradlew bundleProductionRelease'
+              run: ./gradlew bundleProductionRelease --no-daemon
+            - name: 'production-release.aab をリネーム'
+              run: |
+                APK_NAME="app/build/outputs/bundle/productionRelease/app-production-release.aab"
+                NEW_APK_NAME="${APK_NAME//app-/v${{ env.VERSION_NAME }}-}"
+                mv $APK_NAME $NEW_APK_NAME
+                ls -l "app/build/outputs/bundle/productionRelease"
+
+            - name: 'Github Release に APK を配置'
+              uses: softprops/action-gh-release@v2
+              with:
+                name: 'v${{ env.VERSION_NAME }}-production-release'
+                body: ''
+                tag_name: 'v${{ env.VERSION_NAME }}-production-release'
+                files: |
+                    myapp/app/build/outputs/apk/develop/debug/*.apk
+                    myapp/app/build/outputs/apk/staging/debug/*.apk
+                    myapp/app/build/outputs/apk/sandbox/debug/*.apk
+                    myapp/app/build/outputs/apk/production/release/*.apk
+                    myapp/app/build/outputs/bundle/productionRelease/*.aab
+
