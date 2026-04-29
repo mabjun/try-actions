@@ -21,3 +21,11 @@ dependencyResolutionManagement {
 
 rootProject.name = "My Application"
 include(":app")
+
+// update
+// update
+// update
+// changes
+// changes
+// changes
+
