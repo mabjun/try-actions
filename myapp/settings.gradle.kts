@@ -21,3 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "My Application"
 include(":app")
+
+// hotfix 002 
+// hotfix 002
+
