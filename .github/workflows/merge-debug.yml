@@ -15,7 +15,7 @@ on:
             - develop
             - staging
             - sandbox
-#            - feature/202509/mabuchi/act1
+            - feature/act2
 
 jobs:
     build-debug:
@@ -46,6 +46,9 @@ jobs:
               uses: gradle/actions/setup-gradle@v4
 
             - run: echo 'github.ref_name:${{ github.ref_name }}'
+            - run: echo 'github.ref:${{ github.ref }}'
+            - run: echo 'github.ref_type:${{ github.ref_type }}'
+            - run: echo 'github.sha:${{ github.sha }}'
 
             - name: 'develop ブランチ用の env を設定'
               if: github.ref_name == 'develop' || inputs.target-environment == 'develop'
@@ -65,10 +68,11 @@ jobs:
                 echo "BRANCH=sandbox" >> $GITHUB_ENV
                 echo "BRANCH_CAMEL=Sandbox" >> $GITHUB_ENV
 
-            # - name: 'ショート SHA を取得'
-            #   id: get_short_sha
-            #   run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
-            # - run: echo "SHA:${{ env.SHORT_SHA }}"
+            - name: 'ショート SHA を取得'
+              id: get_short_sha
+              run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_ENV"
+
+            - run: echo "SHA:${{ env.SHORT_SHA }}"
 
             - name: 'キーストアを復元'
               run: |
@@ -99,14 +103,42 @@ jobs:
                 mv $APK_NAME $NEW_APK_NAME
                 ls -l "app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE }}"
 
+            - name: 'generate tag name'
+              run: echo 'TAG_NAME=v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}-${{ env.SHORT_SHA }}' >> $GITHUB_ENV
+
+            - name: 'delete tag'
+              continue-on-error: true
+              run: |
+                git fetch --tags
+                git tag -d ${{ env.TAG_NAME }}
+                git push --delete origin ${{ env.TAG_NAME }}
+              # エラーは無視する。
+
+            - name: 'tag 付け'
+              run: |
+                git tag ${{ env.TAG_NAME }}
+                git push origin ${{ env.TAG_NAME }}
+
             - name: 'Github Release に APK を配置する'
               uses: softprops/action-gh-release@v2
               with:
-                name: 'v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
-                body: ''
-                tag_name: 'v${{ env.VERSION_NAME }}-${{ env.BRANCH }}-${{ env.BUILD_TYPE }}'
+                name: '${{ env.TAG_NAME }}'
+                tag_name: '${{ env.TAG_NAME }}'
+              #  target_commitish: '${{ github.sha }}'
+                draft: false
                 files: |
                     myapp/app/build/outputs/apk/${{ env.BRANCH }}/${{ env.BUILD_TYPE}}/*.apk
+
+
+            - run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
+
+            - name: 'Slack'
+              uses: rtCamp/action-slack-notify@v2.2.0
+              if: success()
+              env:
+                SLACK_WEBHOOK: '${{ secrets.SLACK_WEBHOOK }}'
+                SLACK_TITLE: '通知だよ'
+                SLACK_MESSAGE: '${{ env.BRANCH }} マージ&ビルド成功 [ ${{ env.REPOSITORY_NAME }} ]'
 
 
     
