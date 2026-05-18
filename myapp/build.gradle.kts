@@ -21,4 +21,8 @@ buildscript {
         classpath("gradle.plugin.com.worker8.android_lint_reporter:android_lint_reporter:2.1.0")
     }
 }
+// updage in hotfix line 1
+// updage in hotfix line 2
+
+// hotfix x01
 // update in develop
