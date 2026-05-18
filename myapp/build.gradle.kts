@@ -8,6 +8,9 @@ plugins {
 //        classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1")
 //    }
 //}
+
+// develop up x01
+
 buildscript {
     repositories {
         maven {
